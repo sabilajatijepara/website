@@ -1,7 +1,6 @@
 <template>
   <header class="">
-    <div class="container mx-auto flex items-center justify-between p-4
-    bg-slate-300 rounded-2xl">
+    <div class="container mx-auto flex items-center justify-between p-4 rounded-2xl">
       <!-- Logo -->
       <div class="text-2xl font-bold">
         <nuxt-link to="/">Sabilajati Jepara</nuxt-link>

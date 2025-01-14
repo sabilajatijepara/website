@@ -1,31 +1,31 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRouter, useNuxtApp } from "#app";
-import { collection, getDocs, addDoc, Timestamp } from "firebase/firestore";
+import { useRouter, useNuxtApp, useRoute } from "#app";
+import { collection, doc, getDocs, getDoc, updateDoc } from "firebase/firestore";
 import axios from "axios";
 
 // Firebase database
 const { $db } = useNuxtApp();
 const router = useRouter();
+const route = useRoute();
 
 // Form fields
 const name = ref("");
 const price = ref("");
 const description = ref("");
-const categories = ref([]); // Array untuk menyimpan kategori yang dipilih
-const selectedCategories = ref([]); // Array kategori terpilih
+const category = ref([]);
 
 // Data kategori
+const categories = ref([]);
 const isLoading = ref(true);
 
 // Gambar
 const images = ref([]);
 const uploadResult = ref([]);
 const uploadedImages = ref([]);
-const uploadProgress = ref(0); // Track overall progress
+const uploadProgress = ref(0);
 const cekUp = ref(false);
-const isUploading = ref(false); // Track overall upload status
-const totalBytes = ref(0); // Total bytes of all files
+const isUploading = ref(false);
 const error = ref(null);
 const file = ref([]);
 const progress = ref(0);
@@ -46,80 +46,120 @@ const fetchCategories = async () => {
   }
 };
 
+// Fetch data produk berdasarkan ID
+const fetchProduct = async (id) => {
+  try {
+    const productDoc = await getDoc(doc($db, "products", id));
+    if (productDoc.exists()) {
+      const productData = productDoc.data();
+      name.value = productData.name;
+      price.value = productData.price;
+      description.value = productData.description;
+      category.value = productData.category || [];
+      uploadedImages.value = productData.imageURL || [];
+    } else {
+      console.error("Produk tidak ditemukan.");
+      router.push("/dashboard/products");
+    }
+  } catch (error) {
+    console.error("Error fetching product:", error);
+  }
+};
+
+// Upload gambar
 const uploadImage = async () => {
   error.value = null;
   isUploading.value = true;
   if (file.value.length === 0) {
-    error.value = 'Please select at least one image.';
+    error.value = "Please select at least one image.";
     isUploading.value = false;
     return;
   }
 
   for (let i = 0; i < file.value.length; i++) {
     const formData = new FormData();
-    formData.append('file', file.value[i]);
-    formData.append('upload_preset', 'Sabilaweb');
-    formData.append('cloud_name', 'dj6we26m8');
+    formData.append("file", file.value[i]);
+    formData.append("upload_preset", "Sabilaweb");
+    formData.append("cloud_name", "dj6we26m8");
     try {
       const response = await axios.post(
-        `https://api.cloudinary.com/v1_1/dj6we26m8/image/upload`, // Ganti dengan Cloud Name Anda
+        `https://api.cloudinary.com/v1_1/dj6we26m8/image/upload`,
         formData,
         {
           headers: {
-            'Content-Type': 'multipart/form-data',
+            "Content-Type": "multipart/form-data",
           },
           onUploadProgress: (progressEvent) => {
-            const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
             progress.value = percentCompleted;
           },
         }
       );
-      uploadResult.value.push(response.data.secure_url);
-      progress.value = 0; // Reset progress bar setelah setiap unggahan
+      uploadedImages.value.push(response.data.secure_url);
+      progress.value = 0;
     } catch (err) {
       error.value = err.message;
       progress.value = 0;
-      console.error('Error uploading image:', err);
+      console.error("Error uploading image:", err);
       isUploading.value = false;
-      break; // Stop uploading if there's an error
+      break;
     }
   }
   isUploading.value = false;
 };
 
-// Submit data produk
+// Hapus gambar dari daftar yang diunggah
+const removeImage = (index) => {
+  uploadedImages.value.splice(index, 1);
+};
+
+// Submit perubahan data produk
 const handleSubmit = async () => {
-  if (uploadResult.value.length === 0) {
+  const productId = route.params.id;
+  if (uploadedImages.value.length === 0) {
     alert("Please upload images before submitting.");
     return;
   }
 
   try {
-    await addDoc(collection($db, "products"), {
+    await updateDoc(doc($db, "products", productId), {
       name: name.value,
       price: parseFloat(price.value),
       description: description.value,
-      categories: selectedCategories.value, // Simpan array kategori yang dipilih
-      imageURL: uploadResult.value,
-      createdAt: Timestamp.now(),
+      category: category.value,
+      imageURL: uploadedImages.value,
     });
-    alert("Product added successfully!");
+    alert("Product updated successfully!");
     router.push("/dashboard/products");
   } catch (error) {
-    console.error("Error adding product:", error);
-    alert("Failed to add product. Please try again.");
+    console.error("Error updating product:", error);
+    alert("Failed to update product. Please try again.");
   }
 };
 
-// Fetch kategori saat komponen dimuat
+const toggleCategory = (selectedCategory) => {
+  if (category.value.includes(selectedCategory)) {
+    // Hapus kategori jika sudah ada
+    category.value = category.value.filter((cat) => cat !== selectedCategory);
+  } else {
+    // Tambahkan kategori jika belum ada
+    category.value.push(selectedCategory);
+  }
+};
+
+// Fetch kategori dan data produk saat halaman dimuat
 onMounted(() => {
   fetchCategories();
+  const productId = route.params.id;
+  fetchProduct(productId);
 });
 </script>
 
 <template>
   <div class="p-8">
-    <h1 class="text-2xl font-bold mb-6">Add New Product</h1>
+    <h1 class="text-2xl font-bold mb-6">Edit Product</h1>
     <form @submit.prevent="handleSubmit" class="space-y-4">
       <!-- Nama Produk -->
       <div>
@@ -145,21 +185,22 @@ onMounted(() => {
       </div>
       <!-- Kategori Produk -->
       <div>
-        <label for="category" class="block">Categories</label>
+        <label class="block">Category</label>
         <div v-if="isLoading" class="text-gray-500">Loading categories...</div>
         <div v-else>
           <div
-            v-for="category in categories"
-            :key="category.id"
-            class="flex items-center space-x-2"
+            v-for="categoryItem in categories"
+            :key="categoryItem.id"
+            class="flex items-center gap-2"
           >
             <input
               type="checkbox"
-              :value="category.name"
-              v-model="selectedCategories"
-              id="category-{{ category.id }}"
+              :value="categoryItem.name"
+              :checked="category.includes(categoryItem.name)"
+              @change="toggleCategory(categoryItem.name)"
+              class="cursor-pointer"
             />
-            <label :for="category.id">{{ category.name }}</label>
+            <span>{{ categoryItem.name }}</span>
           </div>
         </div>
       </div>
@@ -191,8 +232,24 @@ onMounted(() => {
         >
           Upload Images
         </button>
-        <div v-if="isUploading" class="text-gray-500 text-sm mt-2">
-          Upload Progress: {{ uploadProgress }}%
+        <div v-if="uploadedImages.length">
+          <h3 class="mt-4">Uploaded Images:</h3>
+          <ul>
+            <li
+              v-for="(image, index) in uploadedImages"
+              :key="index"
+              class="mt-2 flex items-center gap-4"
+            >
+              <img :src="image" alt="" class="w-32 h-32 object-cover" />
+              <button
+                type="button"
+                @click="removeImage(index)"
+                class="bg-red-500 text-white px-4 py-2"
+              >
+                Hapus
+              </button>
+            </li>
+          </ul>
         </div>
       </div>
       <!-- Tombol Submit -->
@@ -200,11 +257,17 @@ onMounted(() => {
         <button
           type="submit"
           class="bg-blue-500 text-white px-4 py-2"
-          :disabled="uploadedImages.value?.length === 0"
+          :disabled="isUploading"
         >
-          Add Product
+          Update Product
         </button>
       </div>
     </form>
   </div>
 </template>
+
+<style scoped>
+.error {
+  color: red;
+}
+</style>

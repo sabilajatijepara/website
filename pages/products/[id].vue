@@ -1,0 +1,180 @@
+<script setup>
+import { ref, onMounted } from "vue";
+import { useRoute, useNuxtApp, useHead } from "#app";
+import { doc, getDoc, collection, getDocs, limit, query } from "firebase/firestore";
+
+import NavBar from "@/components/NavBar.vue";
+import Footer from "@/components/Footer.vue";
+
+const { $db } = useNuxtApp();
+const route = useRoute();
+
+const product = ref(null);
+const otherProducts = ref([]);
+const selectedImage = ref(""); // Menyimpan gambar yang dipilih
+const loading = ref(true);
+
+// Mengambil data produk berdasarkan ID
+const fetchProduct = async (id) => {
+  try {
+    const productDoc = await getDoc(doc($db, "products", id));
+    if (productDoc.exists()) {
+      const productData = {
+        id: productDoc.id,
+        ...productDoc.data(),
+      };
+      product.value = productData;
+      selectedImage.value = productData.imageURL[0]; // Set gambar pertama sebagai default
+      // Mengatur title dan meta tags
+      useHead({
+        title: product.value.name + " — CV. Sabilajati Jepara", // Title halaman
+        meta: [
+          { name: "description", content: product.value.description }, // Meta deskripsi
+          /*{ name: "keywords", content: product.value.keywords?.join(", ") ||
+          "" }, // Meta keywords */
+          { property: "og:title", content: product.value.name + " — CV. Sabilajati Jepara" }, // Open Graph Title
+          { property: "og:description", content: product.value.description }, // Open Graph Deskripsi
+          { property: "og:image", content: product.value.imageURL[0] }, // Open Graph Image
+        ],
+      });
+    } else {
+      console.error("Produk tidak ditemukan!");
+    }
+  } catch (error) {
+    console.error("Gagal mengambil data produk:", error);
+  } finally {
+    loading.value = false;
+  }
+};
+
+// Mengambil produk lainnya
+const fetchOtherProducts = async () => {
+  try {
+    const querySnapshot = await getDocs(query(collection($db,
+    "products"), limit(2)));
+    const allProducts = [];
+    querySnapshot.forEach((doc) => {
+      if (doc.id !== route.params.id) {
+        allProducts.push({ id: doc.id, ...doc.data() });
+      }
+    });
+    otherProducts.value = allProducts.sort(() => Math.random() - 0.5).slice(0, 4); // Random produk lainnya
+  } catch (error) {
+    console.error("Gagal mengambil produk lainnya:", error);
+  }
+};
+
+const formatPrice = (price) => {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(price);
+};
+
+// Fetch data saat komponen dimuat
+onMounted(() => {
+  const productId = route.params.id;
+  fetchProduct(productId);
+  fetchOtherProducts();
+});
+</script>
+
+<template>
+  <div>
+    <div class="px-4 py-2">
+      <NavBar />
+    </div>
+
+    <div v-if="loading" class="container mx-auto text-center py-8">
+      <div>Loading...</div>
+    </div>
+
+    <div v-else-if="product" class="container mx-auto flex">
+      <div class="px-4 py-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- Gambar -->
+          <div class="space-y-2">
+            <!-- Gambar besar -->
+            <div class="rounded-2xl overflow-hidden">
+              <img :src="selectedImage" :alt="product.name" />
+            </div>
+            <!-- Gambar kecil (scrollable) -->
+            <div class="flex space-x-2 overflow-x-auto py-2">
+              <div
+                v-for="(image, index) in product.imageURL"
+                :key="index"
+                @click="selectedImage = image" class="cursor-pointer flex-none w-20 h-20 rounded-xl overflow-hidden"
+              >
+                <img :src="image" :alt="product.name" class="object-cover w-full h-full" />
+              </div>
+            </div>
+          </div>
+          <!-- Teks -->
+          <div>
+            <div class="text-4xl md:text-5xl font-bold">{{ formatPrice(product.price) }}</div>
+            <div class="py-2"></div>
+            <div class="text-2xl md:text-4xl">{{ product.name }}</div>
+            <div class="py-2"></div>
+            <div class="text-base md:text-xl">{{ product.description }}</div>
+            <div class="py-2"></div>
+            <div class="py-4">
+              <div class="flex justify-between space-x-1">
+                <div>
+                  <nuxt-link class="border border-slate-300 px-3 py-2 rounded-full">Tambah ke Keranjang</nuxt-link>
+                </div>
+                <div>
+                  <nuxt-link
+                    :href="'https://wa.me/6282242645601?text=Halo! Saya ingin pesan ' + product.name"
+                    class="bg-slate-300 px-3 py-3 rounded-full font-bold"
+                    >Beli via WhatsApp</nuxt-link
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-else class="container mx-auto text-center py-8">
+      <div>Produk tidak ditemukan!</div>
+    </div>
+
+    <!-- Produk lainnya -->
+    <div class="container mx-auto flex flex-col px-4 py-4">
+      <div class="py-2 md:py-6 font-bold text-2xl md:text-4xl">Produk Lainnya</div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div
+          v-for="item in otherProducts"
+          :key="item.id"
+          class="rounded-2xl"
+        >
+          <div>
+            <img :src="item.imageURL[0]" alt="Produk Lain" class="rounded-2xl" />
+          </div>
+          <div
+            class="relative bg-gray-100 py-6 rounded-2xl border-4 md:border-8 border-white -mt-6 px-4"
+          >
+            <div class="font-bold text-xl">{{ item.name }}</div>
+            <div>{{ formatPrice(item.price) }}</div>
+            <div class="pt-4">
+              <nuxt-link
+                :to="'/products/' + item.id"
+                class="bg-[#8b5a2b] px-4 py-2 rounded-full text-white"
+              >
+                Detail
+              </nuxt-link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="py-4"></div>
+    <div class="container mx-auto flex">
+      <Footer />
+    </div>
+  </div>
+</template>

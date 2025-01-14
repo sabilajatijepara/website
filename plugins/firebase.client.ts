@@ -1,10 +1,10 @@
 import { defineNuxtPlugin } from "#app";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
 
-export default defineNuxtPlugin(() => {
+export default defineNuxtPlugin((nuxtApp) => {
   const firebaseConfig = {
     apiKey: "AIzaSyB5fMnpazeCCNA0lYn8pJhsKqo3UAwbw8k",
     authDomain: "sabilajati-jepara.firebaseapp.com",
@@ -22,12 +22,21 @@ export default defineNuxtPlugin(() => {
   const analytics = getAnalytics(app);
 
   // Inject Firebase services globally
-  return {
-    provide: {
-      firebase: app,
-      db,
-      auth,
-      analytics,
-    },
-  };
+  nuxtApp.provide("firebase", app);
+  nuxtApp.provide("db", db);
+  nuxtApp.provide("auth", auth);
+  nuxtApp.provide("analytics", analytics);
+
+  // Listen to auth state changes and inject user globally
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // User is logged in
+      console.log("User is logged in:", user);
+      nuxtApp.provide("user", user); // Inject user globally
+    } else {
+      // User is logged out
+      console.log("User is logged out");
+      nuxtApp.provide("user", null); // Inject null when logged out
+    }
+  });
 });

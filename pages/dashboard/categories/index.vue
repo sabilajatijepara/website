@@ -1,13 +1,15 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { collection, getDocs, addDoc, deleteDoc, doc } from "firebase/firestore";
+import { collection, getDocs, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 
 const { $db } = useNuxtApp();
 
 // State management
 const categories = ref([]);
 const newCategory = ref("");
+const editedCategory = ref(""); // Untuk menyimpan nilai kategori yang sedang diedit
+const editingCategoryId = ref(null); // Menyimpan ID kategori yang sedang diedit
 const router = useRouter();
 
 // Fetch categories from Firestore
@@ -54,6 +56,38 @@ const handleDeleteCategory = async (id) => {
   }
 };
 
+// Start editing a category
+const handleEditCategory = (category) => {
+  editingCategoryId.value = category.id;
+  editedCategory.value = category.name;
+};
+
+// Save edited category
+const handleSaveCategory = async () => {
+  if (!editedCategory.value.trim()) {
+    alert("Category name cannot be empty");
+    return;
+  }
+
+  try {
+    const categoryDocRef = doc($db, "categories", editingCategoryId.value);
+    await updateDoc(categoryDocRef, { name: editedCategory.value });
+    alert("Category updated successfully!");
+    editingCategoryId.value = null; // Reset editing state
+    editedCategory.value = "";
+    await fetchCategories(); // Refresh categories
+  } catch (error) {
+    alert("Error updating category. Please try again.");
+    console.error(error);
+  }
+};
+
+// Cancel editing
+const handleCancelEdit = () => {
+  editingCategoryId.value = null;
+  editedCategory.value = "";
+};
+
 // Fetch categories on mount
 onMounted(fetchCategories);
 </script>
@@ -92,14 +126,46 @@ onMounted(fetchCategories);
     <h2 class="text-xl font-semibold">Categories List</h2>
     <ul class="list-disc ml-6">
       <li v-for="category in categories" :key="category.id" class="mb-2">
-        {{ category.name }}
-        <button
-          @click="handleDeleteCategory(category.id)"
-          class="bg-red-500 text-white px-2 py-1 ml-4"
-        >
-          Delete
-        </button>
+        <!-- Check if editing this category -->
+        <div v-if="editingCategoryId === category.id" class="flex items-center gap-2">
+          <input
+            type="text"
+            v-model="editedCategory"
+            class="border p-2"
+          />
+          <button
+            @click="handleSaveCategory"
+            class="bg-blue-500 text-white px-2 py-1"
+          >
+            Save
+          </button>
+          <button
+            @click="handleCancelEdit"
+            class="bg-gray-500 text-white px-2 py-1"
+          >
+            Cancel
+          </button>
+        </div>
+        <div v-else class="flex items-center gap-4">
+          {{ category.name }}
+          <button
+            @click="handleEditCategory(category)"
+            class="bg-yellow-500 text-white px-2 py-1"
+          >
+            Edit
+          </button>
+          <button
+            @click="handleDeleteCategory(category.id)"
+            class="bg-red-500 text-white px-2 py-1"
+          >
+            Delete
+          </button>
+        </div>
       </li>
     </ul>
   </div>
 </template>
+
+<style scoped>
+/* Optional styling */
+</style>
