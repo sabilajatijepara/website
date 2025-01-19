@@ -13,7 +13,6 @@ const route = useRoute();
 const name = ref("");
 const price = ref("");
 const description = ref("");
-const category = ref([]);
 
 // Data kategori
 const categories = ref([]);
@@ -30,6 +29,8 @@ const error = ref(null);
 const file = ref([]);
 const progress = ref(0);
 
+const selectedCategories = ref([]);
+
 // Fetch kategori
 const fetchCategories = async () => {
   isLoading.value = true;
@@ -39,6 +40,7 @@ const fetchCategories = async () => {
       id: doc.id,
       ...doc.data(),
     }));
+    console.log(categories.value);
   } catch (error) {
     console.error("Error fetching categories:", error);
   } finally {
@@ -55,8 +57,9 @@ const fetchProduct = async (id) => {
       name.value = productData.name;
       price.value = productData.price;
       description.value = productData.description;
-      category.value = productData.category || [];
+      selectedCategories.value = productData.categories;
       uploadedImages.value = productData.imageURL || [];
+      console.log(productData.categories)
     } else {
       console.error("Produk tidak ditemukan.");
       router.push("/dashboard/products");
@@ -124,11 +127,22 @@ const handleSubmit = async () => {
   }
 
   try {
+    // Misalnya selectedCategories adalah array objek kategori
+    const selectedCategoryNames = selectedCategories.value;
+    
+    console.log("Data yang akan dikirim:", {
+      name: name.value,
+      price: parseFloat(price.value),
+      description: description.value,
+      categories: selectedCategoryNames, // Kirim nama kategori saja
+      imageURL: uploadedImages.value,
+    });
+
     await updateDoc(doc($db, "products", productId), {
       name: name.value,
       price: parseFloat(price.value),
       description: description.value,
-      category: category.value,
+      categories: selectedCategoryNames,
       imageURL: uploadedImages.value,
     });
     alert("Product updated successfully!");
@@ -139,15 +153,19 @@ const handleSubmit = async () => {
   }
 };
 
-const toggleCategory = (selectedCategory) => {
-  if (category.value.includes(selectedCategory)) {
-    // Hapus kategori jika sudah ada
-    category.value = category.value.filter((cat) => cat !== selectedCategory);
+const toggleCategory = (category) => {
+  if (selectedCategories.value.includes(category.name)) {
+    selectedCategories.value = selectedCategories.value.filter(
+      (name) => name !== category.name
+    );
   } else {
-    // Tambahkan kategori jika belum ada
-    category.value.push(selectedCategory);
+    selectedCategories.value.push(category.name);
   }
 };
+
+definePageMeta({
+  middleware: "auth",
+});
 
 // Fetch kategori dan data produk saat halaman dimuat
 onMounted(() => {
@@ -159,6 +177,17 @@ onMounted(() => {
 
 <template>
   <div class="p-8">
+    <div class="w-full text-black">
+      <div class="flex justify-start items-center">
+        <button
+          class="flex bg-black/20 backdrop-blur-2xl rounded-full px-4 py-3 text-white"
+          @click="router.back()"
+        >
+          Back
+        </button>
+      </div>
+    </div>
+    <div class="py-4"></div>
     <h1 class="text-2xl font-bold mb-6">Edit Product</h1>
     <form @submit.prevent="handleSubmit" class="space-y-4">
       <!-- Nama Produk -->
@@ -189,18 +218,18 @@ onMounted(() => {
         <div v-if="isLoading" class="text-gray-500">Loading categories...</div>
         <div v-else>
           <div
-            v-for="categoryItem in categories"
-            :key="categoryItem.id"
+            v-for="category in categories"
+            :key="category.id"
             class="flex items-center gap-2"
           >
             <input
               type="checkbox"
-              :value="categoryItem.name"
-              :checked="category.includes(categoryItem.name)"
-              @change="toggleCategory(categoryItem.name)"
+              :value="category.name"
+              v-model="selectedCategories"
+              
               class="cursor-pointer"
             />
-            <span>{{ categoryItem.name }}</span>
+            <span>{{ category.name }}</span>
           </div>
         </div>
       </div>

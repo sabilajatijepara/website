@@ -17,10 +17,10 @@ const fetchProducts = async () => {
       return {
         id: doc.id,
         ...data,
-        category: Array.isArray(data.category)
-          ? data.category
-          : data.category
-          ? data.category.split(",").map((cat) => cat.trim())
+        categories: Array.isArray(data.categories)
+          ? data.categories
+          : data.categories
+          ? data.categories.split(",").map((cat) => cat.trim())
           : [],
       };
     });
@@ -53,25 +53,28 @@ const formatPrice = (price) => {
   }).format(price);
 };
 
-/* const keluar = () => {
-    $auth.signOut(auth).then(() => {
-      alert('Logout successful!');
-      router.push('/');
-    }).catch((error) => {
-      alert('Error!')
-    });
-  } */
-
-onMounted(() => {
-  fetchProducts();
-});
+const keluar = async () => {
+  try {
+    await $auth.signOut();
+    alert("Logout successful!");
+    router.push("/"); // Redirect ke halaman utama
+  } catch (error) {
+    console.error("Error during logout:", error);
+    alert("Logout failed. Please try again.");
+  }
+};
 
 const { $user } = useNuxtApp();
 
-if (!$user) {
-  // Arahkan pengguna ke halaman login jika belum login
-  useRouter().push('/masuk');
-}
+definePageMeta({
+  middleware: "auth",
+  ssr: false,
+});
+
+onMounted(() => {
+  
+    fetchProducts(); // Fetch produk hanya jika pengguna login
+});
 </script>
 
 <template>
@@ -81,21 +84,25 @@ if (!$user) {
           Dashboard
         </div>
         <div>
-          <button onClick={keluar}>
+          <button @click="keluar">
             Logout
           </button>
         </div>
       </div>
   </div>
   <div class="py-2"></div>
-  <div class="px-4 py-4 grid grid-cols-2 gap-2">
+  <div class="px-4 py-4 grid grid-cols-3 gap-4">
     <div>
       <nuxt-link to="/dashboard/products/add" class="px-4 py-2 bg-green-600
-      rounded-full text-white">Add Product</nuxt-link>
+      rounded-full text-white text-nowrap">Add Product</nuxt-link>
     </div>
     <div>
       <nuxt-link to="/dashboard/categories" class="px-4 py-2 bg-green-600
       rounded-full text-white">Category</nuxt-link>
+    </div>
+    <div>
+      <nuxt-link to="/dashboard/slider" class="px-4 py-2 bg-green-600
+      rounded-full text-white">Slider</nuxt-link>
     </div>
   </div>
   <div class="px-3 py-3">
@@ -122,11 +129,11 @@ if (!$user) {
           <td class="border border-gray-300 px-4 py-2">{{ product.name }}</td>
           <td class="border border-gray-300 px-4 py-2">{{ formatPrice(product.price) }}</td>
           <td class="border border-gray-300 px-4 py-2">
-            <div v-if="product.category && product.category.length > 0">
+            <div v-if="product.categories && product.categories.length > 0">
               <div
-                v-for="(cat, index) in product.category"
+                v-for="(cat, index) in product.categories"
                 :key="index"
-                class="bg-black text-white px-2 py-1 rounded-full inline-block mr-2 mb-1"
+                class="bg-black text-white px-2 py-1 rounded-full inline-block mr-2 mb-1 text-nowrap"
               >
                 {{ cat }}
               </div>

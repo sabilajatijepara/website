@@ -9,6 +9,21 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
     '@nuxtjs/ngrok',
   ],
+  
+  i18n: {
+    locales: [
+      { code: 'en', name: 'English', iso: 'en-US', file: 'en.json' },
+      { code: 'id', name: 'Bahasa Indonesia', iso: 'id-ID', file: 'id.json' }
+    ],
+    defaultLocale: 'id',
+    lazy: true,         // Memuat file bahasa secara dinamis
+    strategy: 'prefix_except_default', // URL tanpa prefix untuk default locale
+    detectBrowserLanguage: {    // Opsi deteksi bahasa browser
+      useCookie: true,
+      cookieKey: 'i18n_redirected',
+      redirectOn: 'root', // Mengarahkan ulang ke root berdasarkan bahasa
+    },
+  },
 
   ngrok: {
     authtoken: '2rYSwu3l6MDDCMLGp456MYW0mvq_69Zxm8jWuMpnAKzTeNjDP',

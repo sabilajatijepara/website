@@ -12,6 +12,20 @@ const editedCategory = ref(""); // Untuk menyimpan nilai kategori yang sedang di
 const editingCategoryId = ref(null); // Menyimpan ID kategori yang sedang diedit
 const router = useRouter();
 
+definePageMeta({
+  middleware: "auth",
+});
+
+// Fungsi untuk membuat slug
+const createSlug = (name) => {
+  return name
+    .toLowerCase()
+    .replace(/\s+/g, '-')           // Mengganti spasi dengan '-'
+    .replace(/[^\w\-]+/g, '')       // Menghapus karakter non-alfanumerik
+    .replace(/--+/g, '-')           // Mengganti tanda hubung ganda dengan satu
+    .trim();                        // Menghapus spasi di awal dan akhir
+};
+
 // Fetch categories from Firestore
 const fetchCategories = async () => {
   try {
@@ -25,15 +39,19 @@ const fetchCategories = async () => {
   }
 };
 
-// Add new category
 const handleAddCategory = async () => {
   if (!newCategory.value.trim()) {
     alert("Category name cannot be empty");
     return;
   }
 
+  const slug = createSlug(newCategory.value);  // Membuat slug dari nama kategori
+
   try {
-    await addDoc(collection($db, "categories"), { name: newCategory.value });
+    await addDoc(collection($db, "categories"), { 
+      name: newCategory.value, 
+      slug: slug 
+    });
     newCategory.value = ""; // Clear input field
     alert("Category added successfully!");
     await fetchCategories(); // Refresh categories
@@ -62,16 +80,20 @@ const handleEditCategory = (category) => {
   editedCategory.value = category.name;
 };
 
-// Save edited category
 const handleSaveCategory = async () => {
   if (!editedCategory.value.trim()) {
     alert("Category name cannot be empty");
     return;
   }
 
+  const slug = createSlug(editedCategory.value);  // Membuat slug dari nama kategori
+
   try {
     const categoryDocRef = doc($db, "categories", editingCategoryId.value);
-    await updateDoc(categoryDocRef, { name: editedCategory.value });
+    await updateDoc(categoryDocRef, { 
+      name: editedCategory.value, 
+      slug: slug 
+    });
     alert("Category updated successfully!");
     editingCategoryId.value = null; // Reset editing state
     editedCategory.value = "";
@@ -147,7 +169,7 @@ onMounted(fetchCategories);
           </button>
         </div>
         <div v-else class="flex items-center gap-4">
-          {{ category.name }}
+          {{ category.name }} (Slug: {{ category.slug }})  <!-- Menampilkan slug -->
           <button
             @click="handleEditCategory(category)"
             class="bg-yellow-500 text-white px-2 py-1"

@@ -111,6 +111,10 @@ const handleSubmit = async () => {
   }
 };
 
+definePageMeta({
+  middleware: "auth",
+});
+
 // Fetch kategori saat komponen dimuat
 onMounted(() => {
   fetchCategories();
@@ -119,6 +123,17 @@ onMounted(() => {
 
 <template>
   <div class="p-8">
+    <div class="w-full text-black">
+      <div class="flex justify-start items-center">
+        <button
+          class="flex bg-black/20 backdrop-blur-2xl rounded-full px-4 py-3 text-white"
+          @click="router.back()"
+        >
+          Back
+        </button>
+      </div>
+    </div>
+    <div class="py-4"></div>
     <h1 class="text-2xl font-bold mb-6">Add New Product</h1>
     <form @submit.prevent="handleSubmit" class="space-y-4">
       <!-- Nama Produk -->

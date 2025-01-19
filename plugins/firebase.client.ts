@@ -15,28 +15,13 @@ export default defineNuxtPlugin((nuxtApp) => {
     measurementId: "G-09Z0NWWTVW",
   };
 
-  // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   const auth = getAuth(app);
   const analytics = getAnalytics(app);
 
-  // Inject Firebase services globally
   nuxtApp.provide("firebase", app);
   nuxtApp.provide("db", db);
   nuxtApp.provide("auth", auth);
   nuxtApp.provide("analytics", analytics);
-
-  // Listen to auth state changes and inject user globally
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      // User is logged in
-      console.log("User is logged in:", user);
-      nuxtApp.provide("user", user); // Inject user globally
-    } else {
-      // User is logged out
-      console.log("User is logged out");
-      nuxtApp.provide("user", null); // Inject null when logged out
-    }
-  });
 });

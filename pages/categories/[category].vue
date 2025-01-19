@@ -54,21 +54,32 @@ useHead({
   ],
 });
 </script>
-
 <template>
   <!-- Kontainer Utama -->
-  <div class="px-4 py-2">
+  <div class="">
     <NavBar />
   </div>
 
   <!-- Daftar Produk -->
   <div class="container mx-auto py-4 px-4">
     <!-- Judul Kategori -->
-    <div class="text-2xl font-bold mb-6">Kategori: {{ category }}</div>
-
+    <div class="py-2 px-3 bg-slate-300 rounded-lg">
+      <ol class="flex items-center whitespace-nowrap">
+        <li class="inline-flex items-center">
+          <span>{{ $t('Category') }}</span>
+          <svg class="shrink-0 size-5 text-gray-400 dark:text-neutral-600 mx-2" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M6 13L10 3" stroke="currentColor" stroke-linecap="round"></path>
+          </svg>
+        </li>
+        <li>
+          <span>{{ category }}</span>
+        </li>
+      </ol>
+    </div>
+    <div class="py-4"></div>
     <!-- Loading atau Produk -->
     <div v-if="isLoading" class="text-center py-4">
-      <p>Memuat produk...</p>
+      <p>{{ $t('Loading') }}</p>
     </div>
     <div v-else-if="error" class="text-center text-red-500">
       <p>{{ error }}</p>
@@ -76,7 +87,7 @@ useHead({
     <div v-else>
       <!-- Kondisi Produk Tidak Ada -->
       <div v-if="products.length === 0" class="text-center py-4 text-lg font-semibold text-gray-600">
-        Produk tidak ada dalam kategori ini.
+        {{ $t('Product NF') }}
       </div>
 
       <!-- Produk -->

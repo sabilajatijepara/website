@@ -1,15 +1,16 @@
 <template>
-  <footer class="px-8 py-8 bg-gray-200 rounded-t-2xl">
+  <footer class="px-8 py-8 border-t">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 justify-between">
       <div>
         <div class="font-bold text-2xl">Sabilajati Jepara</div>
         <div class="space-y-2 pt-2">
-          <div class="text-gray-600">Kami adalah produsen meja kursi sekolah, meja kursi cafe, serta
-          gazebo dan bungalow</div>
+          <div class="text-gray-600">
+            {{ $t('AboutFoo') }}
+          </div>
         </div>
       </div>
       <div>
-        <div class="font-bold">Temukan Kami</div>
+        <div class="font-bold">{{ $t('Find Us') }}</div>
         <div class="space-y-2">
         <div class="pt-3"><Icon name="ri:map-pin-2-line"/>
             <nuxt-link to="https://maps.app.goo.gl/aUv74NiqGtibWH8b7">
@@ -28,9 +29,8 @@
       <div>
         <div class="font-bold">Company</div>
         <div class="space-y-1 pt-2">
-          <div>About</div>
-          <div>Services</div>
-          <div>Cara Pemesanan</div>
+          <div><nuxt-link :to="localePath('about')">{{ $t('About') }}</nuxt-link></div>
+          <div><NuxtLinkLocale to="howorder">{{ $t('How To Order') }}</NuxtLinkLocale></div>
         </div>
       </div>
     </div>
@@ -51,3 +51,8 @@
     </div>
   </footer>
 </template>
+
+<script setup>
+const { t } = useI18n()
+const localePath = useLocalePath()
+</script>

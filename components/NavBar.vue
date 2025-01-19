@@ -3,18 +3,19 @@
     <div class="container mx-auto flex items-center justify-between p-4 rounded-2xl">
       <!-- Logo -->
       <div class="text-2xl font-bold">
-        <nuxt-link to="/">Sabilajati Jepara</nuxt-link>
+        <NuxtLinkLocale to="/">Sabilajati Jepara</NuxtLinkLocale>
       </div>
 
       <!-- Desktop Menu -->
       <nav class="hidden md:flex space-x-6">
-        <nuxt-link to="/" class="hover:text-gray-300">Home</nuxt-link>
-        <nuxt-link to="/" class="hover:text-gray-300">About</nuxt-link>
-        <nuxt-link to="/" class="hover:text-gray-300">Services</nuxt-link>
-        <nuxt-link to="/" class="hover:text-gray-300">Contact</nuxt-link>
+        <NuxtLinkLocale to="/" class="hover:text-gray-300">{{ $t('Home') }}</NuxtLinkLocale>
+        <NuxtLinkLocale to="/about" class="hover:text-gray-300">{{ $t('About') }}</NuxtLinkLocale>
+        <!--<NuxtLinkLocale to="/howorder" class="hover:text-gray-300">{{ $t('How To Order') }}</NuxtLinkLocale>-->
+        <NuxtLinkLocale to="https://wa.me/+6285225208256" class="hover:text-gray-300">{{ $t('Contact') }}</NuxtLinkLocale>
       </nav>
 
       <!-- Mobile Menu Button -->
+      <NuxtLinkLocale to="/search" class="block"><Icon name="ri:search-line"/></NuxtLinkLocale>
       <button
         class="block md:hidden focus:outline-none"
         @click="toggleMenu"
@@ -42,12 +43,12 @@
       <div
         v-if="isMenuOpen"
         class="fixed inset-0 bg-slate-300 flex flex-col text-xl
-        px-8 py-6 z-50"
+        px-4 py-4 z-50"
       >
         <div class="flex text-gray-300 focus:outline-none
           text-2xl justify-between">
           <div class="font-bold text-black">Sabilajati Jepara</div>
-          <div>
+          <div class="space-x-2">
             <button
               class="text-gray-300 focus:outline-none
               text-2xl"
@@ -71,26 +72,26 @@
           </div>
         </div>
         <div class="flex flex-col px-8 py-20 space-y-8">
-        <nuxt-link
+        <NuxtLinkLocale
           to="/"
-          class="hover:text-gray-300 text-2xl"
+          class="hover:text-gray-400 text-2xl"
           @click="toggleMenu"
-        >Home</nuxt-link>
-        <nuxt-link
-          to="/"
-          class="hover:text-gray-300 text-2xl"
+        >{{ $t('Home') }}</NuxtLinkLocale>
+        <NuxtLinkLocale
+          to="/about"
+          class="hover:text-gray-400 text-2xl"
           @click="toggleMenu"
-        >About</nuxt-link>
-        <nuxt-link
-          to="/"
-          class="hover:text-gray-300 text-2xl"
+        >{{ $t('About') }}</NuxtLinkLocale>
+        <NuxtLinkLocale
+          to="/howorder"
+          class="hover:text-gray-400 text-2xl"
           @click="toggleMenu"
-        >Services</nuxt-link>
-        <nuxt-link
-          to="/"
-          class="hover:text-gray-300 text-2xl"
+        >{{ $t('How To Order') }}</NuxtLinkLocale>
+        <NuxtLinkLocale
+          to="https://wa.me/+6285225208256"
+          class="hover:text-gray-400 text-2xl"
           @click="toggleMenu"
-        >Contact</nuxt-link>
+        >{{ $t('Contact') }}</NuxtLinkLocale>
         </div>
       </div>
     </transition>

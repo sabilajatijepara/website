@@ -51,7 +51,7 @@ const fetchProduct = async (id) => {
 const fetchOtherProducts = async () => {
   try {
     const querySnapshot = await getDocs(query(collection($db,
-    "products"), limit(2)));
+    "products"), limit(4)));
     const allProducts = [];
     querySnapshot.forEach((doc) => {
       if (doc.id !== route.params.id) {
@@ -83,15 +83,38 @@ onMounted(() => {
 
 <template>
   <div>
-    <div class="px-4 py-2">
+    <div class="">
       <NavBar />
     </div>
+    <div class="py-2"></div>
 
     <div v-if="loading" class="container mx-auto text-center py-8">
-      <div>Loading...</div>
+      <div>{{ $t('Loading') }}</div>
     </div>
 
-    <div v-else-if="product" class="container mx-auto flex">
+    <div v-else-if="product" class="container mx-auto flex flex-col">
+      <div class="px-4">
+      <div class="py-2 px-3 bg-slate-300 rounded-full">
+      <ol class="items-center whitespace-nowrap text-sm md:text-base">
+        <li class="inline-flex items-center">
+          <nuxt-link to="/">{{ $t('Home') }}</nuxt-link>
+          <svg class="shrink-0 size-5 text-gray-400 dark:text-neutral-600 " width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M6 13L10 3" stroke="#000" stroke-linecap="round"></path>
+          </svg>
+        </li>
+        <li class="inline-flex items-center">
+          <nuxt-link :to="`/categories/` + product.categories[0]">{{ product.categories[0] }}</nuxt-link>
+          <svg class="shrink-0 size-5 text-gray-400 dark:text-neutral-600 " width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M6 13L10 3" stroke="#000" stroke-linecap="round"></path>
+          </svg>
+        </li>
+        <li class="inline-flex items-center">
+          <span>{{ product.name }}</span>
+        </li>
+      </ol>
+    </div>
+    </div>
+    <div class="py-2"></div>
       <div class="px-4 py-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <!-- Gambar -->
@@ -113,22 +136,25 @@ onMounted(() => {
           </div>
           <!-- Teks -->
           <div>
+            <div class="text-base">{{ $t('Start From') }}</div>
             <div class="text-4xl md:text-5xl font-bold">{{ formatPrice(product.price) }}</div>
             <div class="py-2"></div>
-            <div class="text-2xl md:text-4xl">{{ product.name }}</div>
+            <div class="text-2xl md:text-4xl font-semibold">{{ product.name }}</div>
             <div class="py-2"></div>
+            <div class="font-bold text-xl">{{ $t('Description') }}</div>
+            <div class="py-1"></div>
             <div class="text-base md:text-xl">{{ product.description }}</div>
             <div class="py-2"></div>
             <div class="py-4">
               <div class="flex justify-between space-x-1">
-                <div>
+                <!--<div>
                   <nuxt-link class="border border-slate-300 px-3 py-2 rounded-full">Tambah ke Keranjang</nuxt-link>
-                </div>
+                </div>-->
                 <div>
                   <nuxt-link
-                    :href="'https://wa.me/6282242645601?text=Halo! Saya ingin pesan ' + product.name"
+                    :href="`https://wa.me/6285225208256?text=${encodeURIComponent($t('waText', { product: product.name }))}`"
                     class="bg-slate-300 px-3 py-3 rounded-full font-bold"
-                    >Beli via WhatsApp</nuxt-link
+                    >{{ $t('Buy WA') }}</nuxt-link
                   >
                 </div>
               </div>
@@ -139,12 +165,12 @@ onMounted(() => {
     </div>
 
     <div v-else class="container mx-auto text-center py-8">
-      <div>Produk tidak ditemukan!</div>
+      <div>{{ $t('Product NF') }}</div>
     </div>
 
     <!-- Produk lainnya -->
     <div class="container mx-auto flex flex-col px-4 py-4">
-      <div class="py-2 md:py-6 font-bold text-2xl md:text-4xl">Produk Lainnya</div>
+      <div class="py-2 md:py-6 font-bold text-2xl md:text-4xl">{{ $t('Other Product') }}</div>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div
           v-for="item in otherProducts"

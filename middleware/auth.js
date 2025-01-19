@@ -2,11 +2,21 @@ import { useNuxtApp } from "#app";
 import { onAuthStateChanged } from "firebase/auth";
 
 export default defineNuxtRouteMiddleware((to, from) => {
-  const { user } = useNuxtApp().$user;  // Mengakses informasi pengguna yang sudah login
+  const { $auth } = useNuxtApp();
 
-  if (!user) {
-    return navigateTo("/masuk");  // Jika tidak ada user, redirect ke halaman login
-  } else {
-    return navigateTo("/dashboard/products")
+  if (!$auth) {
+    console.error("Firebase auth is not initialized.");
+    return navigateTo("/masuk");
   }
+
+  return new Promise((resolve) => {
+    const unsubscribe = $auth.onAuthStateChanged((user) => {
+      if (!user) {
+        console.log("No user logged in, redirecting to /masuk.");
+        return navigateTo("/masuk");
+      }
+      unsubscribe(); // Hentikan listener
+      resolve();
+    });
+  });
 });
