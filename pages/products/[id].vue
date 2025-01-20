@@ -14,6 +14,36 @@ const otherProducts = ref([]);
 const selectedImage = ref(""); // Menyimpan gambar yang dipilih
 const loading = ref(true);
 
+// ** Fetch SSR data menggunakan useAsyncData **
+const { data: ssrProduct } = await useAsyncData("product-meta", async () => {
+  const productId = route.params.id;
+  const productDoc = await getDoc(doc($db, "products", productId));
+  if (productDoc.exists()) {
+    const productData = {
+      id: productDoc.id,
+      ...productDoc.data(),
+    };
+    
+    console.log(productData)
+
+    // Atur metadata untuk SEO
+    useHead({
+      title: productData.name + " — CV. Sabilajati Jepara", // Title halaman
+      meta: [
+        { name: "description", content: productData.description }, // Meta deskripsi
+        { property: "og:title", content: productData.name + " — CV. Sabilajati Jepara" }, // Open Graph Title
+        { property: "og:description", content: productData.description }, // Open Graph Deskripsi
+        { property: "og:image", content: productData.imageURL[0] }, // Open Graph Image
+      ],
+    });
+
+    return productData;
+  } else {
+    console.error("Produk tidak ditemukan!");
+    return null;
+  }
+});
+
 // Mengambil data produk berdasarkan ID
 const fetchProduct = async (id) => {
   try {
@@ -26,17 +56,17 @@ const fetchProduct = async (id) => {
       product.value = productData;
       selectedImage.value = productData.imageURL[0]; // Set gambar pertama sebagai default
       // Mengatur title dan meta tags
-      useHead({
+      /*useHead({
         title: product.value.name + " — CV. Sabilajati Jepara", // Title halaman
         meta: [
           { name: "description", content: product.value.description }, // Meta deskripsi
-          /*{ name: "keywords", content: product.value.keywords?.join(", ") ||
-          "" }, // Meta keywords */
-          { property: "og:title", content: product.value.name + " — CV. Sabilajati Jepara" }, // Open Graph Title
+          { name: "keywords", content: product.value.keywords?.join(", ") ||
+          "" }, // Meta keywords
+          { property: "og:title", content: product.value.name + " — CV. Sabilajati Jepara" },
           { property: "og:description", content: product.value.description }, // Open Graph Deskripsi
           { property: "og:image", content: product.value.imageURL[0] }, // Open Graph Image
         ],
-      });
+      });*/
     } else {
       console.error("Produk tidak ditemukan!");
     }

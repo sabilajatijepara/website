@@ -10,6 +10,9 @@ export default defineNuxtConfig({
     '@nuxtjs/ngrok',
   ],
   
+  ssr: true,
+  target: "server",
+  
   i18n: {
     locales: [
       { code: 'en', name: 'English', iso: 'en-US', file: 'en.json' },
