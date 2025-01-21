@@ -1,17 +1,19 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRoute, useHead } from "#app";
+import { useRoute, useHead, useAsyncData } from "#app";
 import NavBar from "@/components/NavBar.vue";
 import Footer from "@/components/Footer.vue";
 
 const route = useRoute();
 
 const product = ref(null);
+const categories = ref([]);
 const otherProducts = ref([]);
 const selectedImage = ref(""); // Menyimpan gambar yang dipilih
 const loading = ref(true);
 
-const fetchProduct = async (id) => {
+const { data: ssrProduct } = await useAsyncData("product", async () => {
+  const id = route.params.id;
   try {
     const { success, product: fetchedProduct } = await $fetch(`/api/products/${id}`);
 
@@ -30,16 +32,21 @@ const fetchProduct = async (id) => {
           { property: "og:image", content: fetchedProduct.imageURL[0] || "" },
         ],
       });
+
+      return fetchedProduct;
     } else {
       console.error("Produk tidak ditemukan!");
+      return null;
     }
   } catch (error) {
     console.error("Gagal mengambil data produk:", error);
+    return null;
   } finally {
     loading.value = false;
   }
-};
+});
 
+// Mengambil produk lainnya
 const fetchOtherProducts = async () => {
   try {
     const { success, products } = await $fetch(`/api/products/other`, {
@@ -56,6 +63,7 @@ const fetchOtherProducts = async () => {
   }
 };
 
+// Menggunakan formatPrice
 const formatPrice = (price) => {
   return new Intl.NumberFormat("id-ID", {
     style: "currency",
@@ -65,10 +73,8 @@ const formatPrice = (price) => {
   }).format(price);
 };
 
-// Fetch data saat komponen dimuat
+// Fetch produk lainnya saat komponen dimuat
 onMounted(() => {
-  const productId = route.params.id;
-  fetchProduct(productId);
   fetchOtherProducts();
 });
 </script>
@@ -80,11 +86,7 @@ onMounted(() => {
     </div>
     <div class="py-2"></div>
 
-    <div v-if="loading" class="container mx-auto text-center py-8">
-      <div>{{ $t('Loading') }}</div>
-    </div>
-
-    <div v-else-if="product" class="container mx-auto flex flex-col">
+    <div v-if="product" class="container mx-auto flex flex-col">
       <div class="px-4">
       <div class="py-2 px-3 bg-slate-300 rounded-full">
       <ol class="items-center whitespace-nowrap text-sm md:text-base">
@@ -156,9 +158,9 @@ onMounted(() => {
       </div>
     </div>
 
-    <div v-else class="container mx-auto text-center py-8">
+    <!--<div class="container mx-auto text-center py-8">
       <div>{{ $t('Product NF') }}</div>
-    </div>
+    </div>-->
 
     <!-- Produk lainnya -->
     <div class="container mx-auto flex flex-col px-4 py-4">

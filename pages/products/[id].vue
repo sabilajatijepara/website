@@ -14,37 +14,37 @@ const otherProducts = ref([]);
 const selectedImage = ref(""); // Menyimpan gambar yang dipilih
 const loading = ref(true);
 
-console.log("Firebase Admin Connected:", $adminDb !== undefined);
+const { data: ssrProduct } = await useAsyncData("product", async () => {
+  const id = route.params.id;
+  try {
+    const { success, product: fetchedProduct } = await $fetch(`/api/products/${id}`);
 
-// ** Fetch SSR data menggunakan useAsyncData **
-/*const { data: ssrProduct } = await useAsyncData("product-meta", async () => {
-  const productId = route.params.id;
-  const productDoc = await getDoc(doc($db, "products", productId));
-  if (productDoc.exists()) {
-    const productData = {
-      id: productDoc.id,
-      ...productDoc.data(),
-    };
-    
-    console.log(productData)
+    if (success) {
+      product.value = fetchedProduct;
+      selectedImage.value = fetchedProduct.imageURL[0]; // Set gambar pertama sebagai default
 
-    // Atur metadata untuk SEO
-    useHead({
-      title: productData.name + " — CV. Sabilajati Mebel Jepara" || "CV. Sabilajati Mebel Jepara", // Title halaman
-      meta: [
-        { name: "description", content: productData.description }, // Meta deskripsi
-        { property: "og:title", content: productData.name + " — CV. Sabilajati Jepara" }, // Open Graph Title
-        { property: "og:description", content: productData.description }, // Open Graph Deskripsi
-        { property: "og:image", content: productData.imageURL[0] }, // Open Graph Image
-      ],
-    });
+      // Atur metadata untuk SEO
+      useHead({
+        title: fetchedProduct.name + " — CV. Sabilajati Jepara",
+        meta: [
+          { name: "description", content: fetchedProduct.description || "" },
+          { name: "keywords", content: fetchedProduct.keywords?.join(", ") || "" },
+          { property: "og:title", content: fetchedProduct.name + " — CV. Sabilajati Jepara" },
+          { property: "og:description", content: fetchedProduct.description || "" },
+          { property: "og:image", content: fetchedProduct.imageURL[0] || "" },
+        ],
+      });
 
-    return productData;
-  } else {
-    console.error("Produk tidak ditemukan!");
+      return fetchedProduct;
+    } else {
+      console.error("Produk tidak ditemukan!");
+      return null;
+    }
+  } catch (error) {
+    console.error("Gagal mengambil data produk:", error);
     return null;
   }
-});*/
+});
 
 // Mengambil data produk berdasarkan ID
 const fetchProduct = async (id) => {
