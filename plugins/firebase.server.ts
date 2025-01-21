@@ -2,6 +2,8 @@ import { initializeApp, cert, getApps } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 
 export default defineNuxtPlugin(() => {
+  const config = useRuntimeConfig();
+  
   // Inisialisasi Firebase Admin hanya jika belum diinisialisasi
   if (!getApps().length) {
     initializeApp({
