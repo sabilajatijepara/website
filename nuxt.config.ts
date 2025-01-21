@@ -26,12 +26,6 @@ export default defineNuxtConfig({
     },
   },
   
-  app: {
-    head: {
-      keywords: 'mebel jepara, kursi impres, meja kursi impres, cv sabilajati, cv sabilajati jepara, furniture jepara, kursi meja cafe'
-    }
-  },
-  
   i18n: {
     locales: [
       { code: 'en', name: 'English', iso: 'en-US', file: 'en.json' },

@@ -15,7 +15,7 @@
       </nav>
 
       <!-- Mobile Menu Button -->
-      <NuxtLinkLocale to="/search" class="block"><Icon name="ri:search-line"/></NuxtLinkLocale>
+      <NuxtLinkLocale to="/search" class="block"><Icon name="ri:search-line"><text>Search</text></Icon></NuxtLinkLocale>
       <button
         class="block md:hidden focus:outline-none"
         @click="toggleMenu"
@@ -33,7 +33,9 @@
             stroke-linejoin="round"
             stroke-width="2"
             d="M4 6h16M4 12h16m-7 6h7"
-          ></path>
+          >
+            <title>Menu</title>
+          </path>
         </svg>
       </button>
     </div>
@@ -66,7 +68,9 @@
                   stroke-linejoin="round"
                   stroke-width="2"
                   d="M6 18L18 6M6 6l12 12"
-                ></path>
+                >
+                  <title>Close</title>
+                </path>
               </svg>
             </button>
           </div>

@@ -62,8 +62,10 @@ const fetchProduct = async (id) => {
         title: product.value.name + " — CV. Sabilajati Jepara", // Title halaman
         meta: [
           { name: "description", content: product.value.description }, // Meta deskripsi
-          { name: "keywords", content: product.value.keywords?.join(", ") ||
-          "" }, // Meta keywords
+          {
+            name: "keywords", 
+            content: product.value.name.split(" ").join(", ") + ", " + product.value.name +", Mebel jepara, meubel jepara, kursi meja cafe, meja kursi sekolah, jasa pembuatan gazebo, jasa pembuatan bungalow, furniture custom" || product.value.name 
+          }, // Meta keywords
           { property: "og:title", content: product.value.name + " — CV. Sabilajati Jepara" },
           { property: "og:description", content: product.value.description }, // Open Graph Deskripsi
           { property: "og:image", content: product.value.imageURL[0] }, // Open Graph Image
@@ -126,7 +128,7 @@ onMounted(() => {
 
     <div v-else-if="product" class="container mx-auto flex flex-col">
       <div class="px-4">
-      <div class="py-2 px-3 bg-slate-300 rounded-full">
+      <div class="py-2 px-3 bg-slate-300 rounded-full overflow-hidden">
       <ol class="items-center whitespace-nowrap text-sm md:text-base">
         <li class="inline-flex items-center">
           <nuxt-link to="/">{{ $t('Home') }}</nuxt-link>
@@ -141,7 +143,7 @@ onMounted(() => {
           </svg>
         </li>
         <li class="inline-flex items-center">
-          <span>{{ product.name }}</span>
+          <span class="text-wrap">{{ product.name }}</span>
         </li>
       </ol>
     </div>
