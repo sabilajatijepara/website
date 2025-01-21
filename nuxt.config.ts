@@ -13,6 +13,19 @@ export default defineNuxtConfig({
   ssr: true,
   target: "server",
   
+  runtimeConfig: {
+    // Variabel yang hanya tersedia di server (private)
+    firebaseAdmin: {
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    },
+    // Jika perlu, tambahkan public runtime config
+    public: {
+      // Tambahkan variabel yang ingin diakses di client
+    },
+  },
+  
   app: {
     head: {
       keywords: 'mebel jepara, kursi impres, meja kursi impres, cv sabilajati, cv sabilajati jepara, furniture jepara, kursi meja cafe'
