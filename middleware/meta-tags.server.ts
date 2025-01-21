@@ -1,5 +1,4 @@
 import { getFirestore, doc, getDoc } from "firebase-admin/firestore";
-import { defineNuxtMiddleware } from "#app";
 
 export default defineNuxtMiddleware(async (context) => {
   const { req, res, params } = context;
