@@ -1,12 +1,9 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRoute, useNuxtApp, useHead } from "#app";
-import { doc, getDoc, collection, getDocs, limit, query } from "firebase/firestore";
-
+import { useRoute, useHead } from "#app";
 import NavBar from "@/components/NavBar.vue";
 import Footer from "@/components/Footer.vue";
 
-const { $db, $adminDb } = useNuxtApp();
 const route = useRoute();
 
 const product = ref(null);
@@ -14,59 +11,23 @@ const otherProducts = ref([]);
 const selectedImage = ref(""); // Menyimpan gambar yang dipilih
 const loading = ref(true);
 
-console.log("Firebase Admin Connected:", $adminDb !== undefined);
-
-// ** Fetch SSR data menggunakan useAsyncData **
-/*const { data: ssrProduct } = await useAsyncData("product-meta", async () => {
-  const productId = route.params.id;
-  const productDoc = await getDoc(doc($db, "products", productId));
-  if (productDoc.exists()) {
-    const productData = {
-      id: productDoc.id,
-      ...productDoc.data(),
-    };
-    
-    console.log(productData)
-
-    // Atur metadata untuk SEO
-    useHead({
-      title: productData.name + " — CV. Sabilajati Mebel Jepara" || "CV. Sabilajati Mebel Jepara", // Title halaman
-      meta: [
-        { name: "description", content: productData.description }, // Meta deskripsi
-        { property: "og:title", content: productData.name + " — CV. Sabilajati Jepara" }, // Open Graph Title
-        { property: "og:description", content: productData.description }, // Open Graph Deskripsi
-        { property: "og:image", content: productData.imageURL[0] }, // Open Graph Image
-      ],
-    });
-
-    return productData;
-  } else {
-    console.error("Produk tidak ditemukan!");
-    return null;
-  }
-});*/
-
-// Mengambil data produk berdasarkan ID
 const fetchProduct = async (id) => {
   try {
-    const productDoc = await getDoc(doc($db, "products", id));
-    if (productDoc.exists()) {
-      const productData = {
-        id: productDoc.id,
-        ...productDoc.data(),
-      };
-      product.value = productData;
-      selectedImage.value = productData.imageURL[0]; // Set gambar pertama sebagai default
-      // Mengatur title dan meta tags
+    const { success, product: fetchedProduct } = await $fetch(`/api/products/${id}`);
+
+    if (success) {
+      product.value = fetchedProduct;
+      selectedImage.value = fetchedProduct.imageURL[0]; // Set gambar pertama sebagai default
+
+      // Atur metadata untuk SEO
       useHead({
-        title: product.value.name + " — CV. Sabilajati Jepara", // Title halaman
+        title: fetchedProduct.name + " — CV. Sabilajati Jepara",
         meta: [
-          { name: "description", content: product.value.description }, // Meta deskripsi
-          { name: "keywords", content: product.value.keywords?.join(", ") ||
-          "" }, // Meta keywords
-          { property: "og:title", content: product.value.name + " — CV. Sabilajati Jepara" },
-          { property: "og:description", content: product.value.description }, // Open Graph Deskripsi
-          { property: "og:image", content: product.value.imageURL[0] }, // Open Graph Image
+          { name: "description", content: fetchedProduct.description || "" },
+          { name: "keywords", content: fetchedProduct.keywords?.join(", ") || "" },
+          { property: "og:title", content: fetchedProduct.name + " — CV. Sabilajati Jepara" },
+          { property: "og:description", content: fetchedProduct.description || "" },
+          { property: "og:image", content: fetchedProduct.imageURL[0] || "" },
         ],
       });
     } else {
@@ -79,20 +40,19 @@ const fetchProduct = async (id) => {
   }
 };
 
-// Mengambil produk lainnya
 const fetchOtherProducts = async () => {
   try {
-    const querySnapshot = await getDocs(query(collection($db,
-    "products"), limit(4)));
-    const allProducts = [];
-    querySnapshot.forEach((doc) => {
-      if (doc.id !== route.params.id) {
-        allProducts.push({ id: doc.id, ...doc.data() });
-      }
+    const { success, products } = await $fetch(`/api/products/other`, {
+      query: { id: route.params.id },
     });
-    otherProducts.value = allProducts.sort(() => Math.random() - 0.5).slice(0, 4); // Random produk lainnya
+
+    if (success) {
+      otherProducts.value = products;
+    } else {
+      console.error("Gagal mengambil produk lainnya.");
+    }
   } catch (error) {
-    console.error("Gagal mengambil produk lainnya:", error);
+    console.error("Error fetching other products:", error);
   }
 };
 
