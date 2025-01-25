@@ -25,11 +25,11 @@ const { data: ssrProduct } = await useAsyncData("product", async () => {
 
       // Atur metadata untuk SEO
       useHead({
-        title: fetchedProduct.name + " — CV. Sabilajati Jepara",
+        title: fetchedProduct.name + " — CV. Sabilajati Mebel Jepara",
         meta: [
           { name: "description", content: fetchedProduct.description || "" },
-          { name: "keywords", content: fetchedProduct.keywords?.join(", ") || "" },
-          { property: "og:title", content: fetchedProduct.name + " — CV. Sabilajati Jepara" },
+          { name: "keywords", content: fetchedProduct.name.split(" ").join(", ") + ", " + fetchedProduct.name + ", Mebel jepara, meubel jepara, kursi meja cafe, meja kursi sekolah, jasa pembuatan gazebo, jasa pembuatan bungalow, furniture custom" || "" },
+          { property: "og:title", content: fetchedProduct.name + " — CV. Sabilajati Mebel Jepara" },
           { property: "og:description", content: fetchedProduct.description || "" },
           { property: "og:image", content: fetchedProduct.imageURL[0] || "" },
         ],

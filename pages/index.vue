@@ -6,11 +6,11 @@ import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 // SEO
 
 useHead({
-        title: "CV. Sabilajati Jepara", // Title halaman
+        title: "CV. Sabilajati Mebel Jepara — Produsen Meja Kursi Sekolah, Furniture Cafe, Gazebo dan Bungalow", // Title halaman
         meta: [
           { name: "description", content: "Kami adalah produsen meja kursi sekolah, meja kursi cafe, serta gazebo dan bungalow" },
           { name: "keywords", content: "Mebel jepara, meubel jepara, kursi meja cafe, meja kursi sekolah, jasa pembuatan gazebo, jasa pembuatan bungalow, furniture custom" }, // Meta keywords
-          { property: "og:title", content: "CV. Sabilajati Jepara" }, // Open Graph Title
+          { property: "og:title", content: "CV. Sabilajati Mebel Jepara — Produsen Meja Kursi Sekolah, Furniture Cafe, Gazebo dan Bungalow" }, // Open Graph Title
           { property: "og:description", content: "Kami adalah produsen meja kursi sekolah, meja kursi cafe, serta gazebo dan bungalow" }, // Open
           /* { property: "og:image", content: product.value.imageURL[0] }, //
           Open Graph Image */
@@ -297,7 +297,7 @@ onBeforeUnmount(() => {
           </div>
           <div class="absolute z-10 inset-y-0 right-0">
             <img class="size-48 md:size-64"
-            src="http://www.jatijeparamebel.com/wp-content/uploads/2020/05/Slide-JJM1.png"
+            src="https://res.cloudinary.com/doninmxbl/image/upload/custom_ebtmqw.png"
             alt="" />
           </div>
         </div>
