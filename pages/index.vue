@@ -1,9 +1,10 @@
 <script setup>
-import { ref, onMounted } from "vue";
-import { useRouter, useNuxtApp } from "#app";
+import { ref, computed, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { useAsyncData } from '#app';
+
 import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 
-const router = useRouter();
 const { $db } = useNuxtApp();
 
 // SEO
@@ -25,99 +26,11 @@ useHead({
         ],
 });
 
-const products = ref([]);
-const currentPage = ref(1); // Halaman aktif
-const perPage = 6; // Jumlah produk per halaman
-const totalProducts = ref(0); // Total produk di database
-const totalPages = ref(0); // Total halaman
-const loading = ref(false); // State untuk loading
-
 const slides = ref([]);
 const currentIndex = ref(0);
 const prevIndex = ref(null);
-const loadings = ref(true);
 
 let autoSlideInterval = null;
-
-const updatePerPage = () => {
-  const screenWidth = window.innerWidth;
-  perPage.value = screenWidth >= 768 ? 6 : 4; // 6 untuk PC/tablet, 4 untuk mobile
-};
-
-const { data: productsData } = await useAsyncData("products", async () => {
-  try {
-    const response = await $fetch("/api/products");
-    return response.success ? response.products : [];
-  } catch (error) {
-    console.error("Gagal mengambil produk:", error);
-    return [];
-  }
-});
-
-const computedProducts = computed(() => productsData.value || []);
-
-const { data: categoryData } = await useAsyncData("categories", async () => {
-  try {
-    const response = await $fetch("/api/categories");
-    return response.success ? response.categories : [];
-  } catch (error) {
-    console.error("Gagal mengambil Kategori:", error);
-    return [];
-  }
-});
-
-const computedCategory = computed(() => categoryData.value || []);
-
-/*const { data: sliderData } = await useAsyncData("sliders", async () => {
-  try {
-    const response = await $fetch("/api/sliders");
-    return response.success ? response.sliders : [];
-    if (sliderData.length > 0) {
-      startAutoSlide();
-    }
-  } catch (error) {
-    console.error("Gagal mengambil Slider:", error);
-    return [];
-  }
-});
-
-const computedSlider = computed(() => sliderData.value || []);
-*/
-// Mengambil produk berdasarkan pagination
-/*const fetchProducts = async (page = 1) => {
-  loading.value = true; // Set loading menjadi true saat mulai mengambil data
-  try {
-    const offset = (page - 1) * perPage;
-    const q = query(
-      collection($db, "products"),
-      orderBy("createdAt", "desc"),
-      limit(offset + perPage)
-    );
-
-    // Ambil total produk (hanya sekali di halaman pertama)
-    if (page === 1) {
-      const totalQuery = query(collection($db, "products"));
-      const totalSnapshot = await getDocs(totalQuery);
-      totalProducts.value = totalSnapshot.size; // Simpan total produk
-      totalPages.value = Math.ceil(totalProducts.value / perPage); // Hitung total halaman
-    }
-
-    const querySnapshot = await getDocs(q);
-
-    // Filter data sesuai halaman
-    const allProducts = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-
-    products.value = allProducts.slice(offset, offset + perPage);
-    currentPage.value = page;
-  } catch (error) {
-    console.error("Error fetching products:", error);
-  } finally {
-    loading.value = false; // Set loading menjadi false setelah data selesai diambil
-  }
-};*/
 
 const fetchSlides = async () => {
   try {
@@ -140,22 +53,6 @@ const fetchSlides = async () => {
   }
 };
 
-/*const categories = ref([]); // Data kategori
-
-const fetchCategories = async () => {
-  try {
-    const q = query(collection($db, "categories"));
-    const querySnapshot = await getDocs(q);
-    categories.value = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-  } catch (error) {
-    console.error("Error fetching categories:", error);
-  }
-};*/
-
-// Auto-slide setiap 10 detik
 const startAutoSlide = () => {
   if (autoSlideInterval) clearInterval(autoSlideInterval); // Bersihkan interval sebelumnya
   if (slides.value.length > 0) {
@@ -172,7 +69,66 @@ const goToSlide = (index) => {
   currentIndex.value = index;
 };
 
-// Format harga IDR
+
+const { data: categoryData } = await useAsyncData("categories", async () => {
+  try {
+    const response = await $fetch("/api/categories");
+    return response.success ? response.categories : [];
+  } catch (error) {
+    console.error("Gagal mengambil Kategori:", error);
+    return [];
+  }
+});
+
+const computedCategory = computed(() => categoryData.value || []);
+
+
+const perPage = 6; // Produk per halaman
+
+// Mendapatkan query parameter page
+const route = useRoute();
+const router = useRouter();
+const currentPage = ref(parseInt(route.query.page) || 1);
+
+// Memanggil API produk berdasarkan page dan perPage
+const { data: productsData, refresh } = await useAsyncData(
+  'products', 
+  async () => {
+    const page = currentPage.value;
+    const response = await $fetch(`/api/products?page=${page}&perPage=${perPage}`);
+    
+    if (response.success) {
+      return {
+        products: response.products,
+        totalProducts: response.totalProducts,
+        totalPages: response.totalPages,
+      };
+    }
+    
+    return { products: [], totalProducts: 0, totalPages: 0 };
+  },
+  {
+    key: computed(() => currentPage.value), // Memastikan refresh saat page berubah
+  }
+);
+
+// Data produk dan total halaman
+const products = computed(() => productsData.value?.products || []);
+const totalPages = computed(() => productsData.value?.totalPages || 0);
+
+// Fungsi untuk berpindah halaman
+const goToPage = (page) => {
+  if (page >= 1 && page <= totalPages.value) {
+    router.push({ query: { ...route.query, page: String(page) } });
+  }
+};
+
+// Monitor perubahan query parameter 'page'
+watch(() => route.query.page, (newPage) => {
+  currentPage.value = parseInt(newPage) || 1;
+  refresh(); // Memanggil refresh data produk saat page berubah
+});
+
 const formatPrice = (price) => {
   return new Intl.NumberFormat("id-ID", {
     style: "currency",
@@ -183,11 +139,6 @@ const formatPrice = (price) => {
 };
 
 onMounted(() => {
-  //fetchProducts(); // Ambil data untuk halaman pertama
-  
-  // Tambahkan event listener untuk menangani perubahan ukuran layar
-  window.addEventListener("resize", updatePerPage);
-  
   fetchSlides();
   //fetchCategories();
 });
@@ -196,26 +147,13 @@ onUnmounted(() => {
   if (autoSlideInterval) clearInterval(autoSlideInterval);
 });
 
-// Bersihkan event listener saat komponen dihancurkan
-onBeforeUnmount(() => {
-  window.removeEventListener("resize", updatePerPage);
-});
 </script>
 
 <template>
-  <!-- Bagian Header -->
   <div class="">
     <NavBar />
   </div>
 
-  <!-- Banner Slider -->
-  <!--<div class="px-4 container mx-auto flex">
-    <div class="flex w-full h-72 justify-center items-center bg-gray-300 overflow-hidden rounded-2xl">
-      <div class="text-3xl font-bold text-center px-4">Selamat datang di CV.
-      Sabilajati Mebel Jepara</div>
-    </div>
-  </div>-->
-  <!-- Slider Section -->
   <div class="">
     <div class="container mx-auto relative flex justify-center items-center w-full h-72 bg-black md:rounded-3xl overflow-hidden">
       <div
@@ -268,8 +206,8 @@ onBeforeUnmount(() => {
       </div>
     </div>
   </div>
-
-<!-- Kategori Produk -->
+  
+  <!-- Kategori Produk -->
 <div class="py-4 container mx-auto flex flex-col px-4">
   <div class="py-4 flex overflow-x-auto">
     <div
@@ -287,10 +225,10 @@ onBeforeUnmount(() => {
   </div>
 </div>
 
-  <!-- Produk -->
+<!-- Produk -->
   <div class="container mx-auto flex px-4 py-4">
     <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-      <div class="rounded-2xl" v-for="product in computedProducts" :key="product.id">
+      <div class="rounded-2xl" v-for="product in products" :key="product.id">
         <div class="hover:shadow-xl rounded-2xl">
           <nuxt-link :to="`/products/${product.id}`">
           <div>
@@ -315,16 +253,26 @@ onBeforeUnmount(() => {
   </div>
 
   <!-- Pagination -->
-  <div v-if="!loading" class="flex justify-center mt-8 space-x-2">
-    <button
-      v-for="page in totalPages"
-      :key="page"
-      :class="['px-4 py-2 rounded-full', currentPage === page ? 'bg-slate-400 text-white' : 'border border-black']"
-      @click="fetchProducts(page)"
-    >
-      {{ page }}
-    </button>
+  <div class="container mx-auto flex justify-center py-6">
+    <div class="flex space-x-4">
+      <button
+        :disabled="currentPage === 1"
+        @click="goToPage(currentPage - 1)"
+        class="px-4 py-2 bg-gray-300 text-gray-600 rounded-lg"
+      >
+        Previous
+      </button>
+      <span class="py-2">{{ currentPage }} / {{ totalPages }}</span>
+      <button
+        :disabled="currentPage === totalPages"
+        @click="goToPage(currentPage + 1)"
+        class="px-4 py-2 bg-gray-300 text-gray-600 rounded-lg"
+      >
+        Next
+      </button>
+    </div>
   </div>
+  
   <div class="py-2"></div>
   <div class="py-4">
     <div class="px-4 container mx-auto flex">
@@ -332,9 +280,9 @@ onBeforeUnmount(() => {
       md:py-12">
         <div class="relative grid grid-cols-2 gap-2 justify-items-center content-center w-full">
           <div class="place-items-center">
-            <div class="relative text-2xl font-bold z-40 md:text-4xl
-            backdrop-invert-0
-            drop-shadow-2xl">{{ $t('Make Furniture') }}</div>
+            <h2 class="relative text-2xl font-bold z-40 md:text-4xl backdrop-invert-0 drop-shadow-2xl">
+                {{ $t('Make Furniture') }}
+              </h2>
           </div>
           <div class="absolute z-10 inset-y-0 right-0">
             <img class="size-48 md:size-64"
@@ -361,14 +309,6 @@ onBeforeUnmount(() => {
   </div>
 </template>
 
-<script>
-import NavBar from "@/components/NavBar.vue";
-import Footer from "@/components/Footer.vue";
-
-export default {
-  components: {
-    NavBar,
-    Footer,
-  },
-};
-</script>
+<style scoped>
+/* Style tetap sama */
+</style>
