@@ -3,8 +3,10 @@ import { ref, onMounted } from "vue";
 import { useRouter, useNuxtApp } from "#app";
 import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 
-// SEO
+const router = useRouter();
+const { $db } = useNuxtApp();
 
+// SEO
 useHead({
         title: "CV. Sabilajati Mebel Jepara — Produsen Meja Kursi Sekolah, Furniture Cafe, Gazebo dan Bungalow", // Title halaman
         meta: [
@@ -15,10 +17,13 @@ useHead({
           /* { property: "og:image", content: product.value.imageURL[0] }, //
           Open Graph Image */
         ],
+        link: [
+          {
+          rel: 'canonical',
+          href: 'https://sabilajati.com' + router.path,
+          },
+        ],
 });
-
-const { $db } = useNuxtApp();
-const router = useRouter();
 
 const products = ref([]);
 const currentPage = ref(1); // Halaman aktif
@@ -198,7 +203,7 @@ onBeforeUnmount(() => {
           class="absolute inset-0 bg-black/30 flex flex-col justify-center items-center text-center text-white px-6"
         >
           <h2 v-if="slide.title" class="text-2xl md:text-3xl font-bold">{{ slide.title }}</h2>
-          <p v-if="slide.description" class="mt-2 text-sm md:text-lg">{{ slide.description }}</p>
+          <h3 v-if="slide.description" class="mt-2 text-sm md:text-lg">{{ slide.description }}</h3>
           <a
             v-if="slide.buttonText && slide.buttonLink"
             :href="slide.buttonLink"
@@ -298,7 +303,7 @@ onBeforeUnmount(() => {
           <div class="absolute z-10 inset-y-0 right-0">
             <img class="size-48 md:size-64"
             src="https://res.cloudinary.com/doninmxbl/image/upload/custom_ebtmqw.png"
-            alt="" />
+            alt="Kursi Kotak" />
           </div>
         </div>
         <div class="py-4"></div>

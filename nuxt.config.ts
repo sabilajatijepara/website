@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     '@nuxtjs/google-fonts',
     '@nuxtjs/i18n',
     '@nuxtjs/ngrok',
+    '@nuxt/image',
   ],
   
   ssr: true,
@@ -50,6 +51,8 @@ export default defineNuxtConfig({
   },
 
   googleFonts: {
+    display: 'swap',
+    base64: true,
     families: {
       "Plus+Jakarta+Sans": true,
       Poppins: true,

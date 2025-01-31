@@ -1,14 +1,37 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { collection, getDocs, query } from "firebase/firestore";
-import { useNuxtApp } from "#app";
+import { useNuxtApp, useRouter } from "#app";
+import { useI18n } from "#imports";
 
 const { $db } = useNuxtApp();
+const router = useRouter();
 const products = ref([]); // Semua produk
 const searchResults = ref([]); // Hasil pencarian
 const searchQuery = ref(""); // Query pencarian
 const isLoading = ref(false);
 const error = ref("");
+
+const { t } = useI18n();
+
+// SEO
+useHead({
+        title: () => `${t("Search Product")} — CV. Sabilajati Mebel Jepara`, // Title halaman
+        meta: [
+          { name: "description", content: "Kami adalah produsen meja kursi sekolah, meja kursi cafe, serta gazebo dan bungalow" },
+          { name: "keywords", content: "Mebel jepara, meubel jepara, kursi meja cafe, meja kursi sekolah, jasa pembuatan gazebo, jasa pembuatan bungalow, furniture custom" }, // Meta keywords
+          { property: "og:title", content: () => `${t("Search Product")} — CV. Sabilajati Mebel Jepara` }, // Open Graph Title
+          { property: "og:description", content: "Kami adalah produsen meja kursi sekolah, meja kursi cafe, serta gazebo dan bungalow" }, // Open
+          /* { property: "og:image", content: product.value.imageURL[0] }, //
+          Open Graph Image */
+        ],
+        link: [
+          {
+          rel: 'canonical',
+          href: 'https://sabilajati.com' + router.path,
+          },
+        ],
+});
 
 // Ambil semua produk dari Firestore
 const fetchProducts = async () => {

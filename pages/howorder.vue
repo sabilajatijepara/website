@@ -1,3 +1,29 @@
+<script setup>
+  import { useI18n } from "#imports";
+  import { useRouter } from "#app";
+  
+  const route = useRoute();
+  const { t } = useI18n();
+  
+  useHead({
+        title: () => `${t("How To Order")} — CV. Sabilajati Mebel Jepara`, // Title halaman
+        meta: [
+          { name: "description", content: "Kami adalah produsen meja kursi sekolah, meja kursi cafe, serta gazebo dan bungalow" },
+          { name: "keywords", content: "Mebel jepara, meubel jepara, kursi meja cafe, meja kursi sekolah, jasa pembuatan gazebo, jasa pembuatan bungalow, furniture custom" }, // Meta keywords
+          { property: "og:title", content: () => `${t("How To Order")} — CV. Sabilajati Mebel Jepara` }, // Open Graph Title
+          { property: "og:description", content: "Kami adalah produsen meja kursi sekolah, meja kursi cafe, serta gazebo dan bungalow" }, // Open
+          /* { property: "og:image", content: product.value.imageURL[0] }, //
+          Open Graph Image */
+        ],
+        link: [
+          {
+          rel: 'canonical',
+          href: 'https://sabilajati.com' + route.path,
+          },
+        ],
+});
+</script>
+
 <template>
   <div>
     <NavBar />
@@ -20,7 +46,7 @@
     <div class="py-4"></div>
     </div>
     <div>
-      <div class="font-bold text-2xl">{{ $t('How To Order') }}</div>
+      <h1 class="font-bold text-2xl">{{ $t('How To Order') }}</h1>
       <div class="py-2"></div>
       <div class="py-4">
         <div>

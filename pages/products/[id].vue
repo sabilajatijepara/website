@@ -33,6 +33,12 @@ const { data: ssrProduct } = await useAsyncData("product", async () => {
           { property: "og:description", content: fetchedProduct.description || "" },
           { property: "og:image", content: fetchedProduct.imageURL[0] || "" },
         ],
+        link: [
+          {
+          rel: 'canonical',
+          href: 'https://sabilajati.com' + route.path,
+          },
+        ],
       });
 
       return fetchedProduct;
@@ -173,7 +179,7 @@ onMounted(() => {
             <div class="text-base">{{ $t('Start From') }}</div>
             <div class="text-4xl md:text-5xl font-bold">{{ formatPrice(product.price) }}</div>
             <div class="py-2"></div>
-            <div class="text-2xl md:text-4xl font-semibold">{{ product.name }}</div>
+            <h1 class="text-2xl md:text-4xl font-semibold">{{ product.name }}</h1>
             <div class="py-2"></div>
             <div class="font-bold text-xl">{{ $t('Description') }}</div>
             <div class="py-1"></div>

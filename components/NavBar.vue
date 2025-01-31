@@ -2,9 +2,9 @@
   <header class="">
     <div class="container mx-auto flex items-center justify-between p-4 rounded-2xl">
       <!-- Logo -->
-      <div class="text-2xl font-bold">
+      <h1 class="text-2xl font-bold">
         <NuxtLinkLocale to="/">Sabilajati Jepara</NuxtLinkLocale>
-      </div>
+      </h1>
 
       <!-- Desktop Menu -->
       <nav class="hidden md:flex space-x-6">
