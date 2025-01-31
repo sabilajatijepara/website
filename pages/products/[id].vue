@@ -36,7 +36,7 @@ const { data: ssrProduct } = await useAsyncData("product", async () => {
         link: [
           {
           rel: 'canonical',
-          href: 'https://sabilajati.com' + route.path,
+          href: 'https://sabilajati.com/' + route.path,
           },
         ],
       });
@@ -210,7 +210,7 @@ onMounted(() => {
 
     <!-- Produk lainnya -->
     <div class="container mx-auto flex flex-col px-4 py-4">
-      <div class="py-2 md:py-6 font-bold text-2xl md:text-4xl">{{ $t('Other Product') }}</div>
+      <h2 class="py-2 md:py-6 font-bold text-2xl md:text-4xl">{{ $t('Other Product') }}</h2>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div
           v-for="item in otherProducts"

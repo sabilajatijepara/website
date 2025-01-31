@@ -46,7 +46,7 @@
     <div class="py-4"></div>
     </div>
     <div>
-      <h1 class="font-bold text-2xl">{{ $t('About') }}</h1>
+      <h2 class="font-bold text-2xl">{{ $t('About') }}</h2>
       <div class="py-2"></div>
       <div class="py-4">
         {{ $t('Info About') }}

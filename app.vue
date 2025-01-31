@@ -5,8 +5,8 @@
 <script setup>
 useHead({
   link: [
-    { rel: "icon", href: "https://blog.falasyam.com/favicon.ico" },
-    { rel: "stylesheet", href: "https://fonts.googleapis.com/icon?family=Material+Icons" },
+    { rel: "icon", href: "/favicon.ico" },
+    { rel: "icon", type="image/svg+xml", href: "/icon.svg" }
   ],
   htmlAttrs: {
       lang: 'id'
