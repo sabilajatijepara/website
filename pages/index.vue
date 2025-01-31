@@ -44,8 +44,47 @@ const updatePerPage = () => {
   perPage.value = screenWidth >= 768 ? 6 : 4; // 6 untuk PC/tablet, 4 untuk mobile
 };
 
+const { data: productsData } = await useAsyncData("products", async () => {
+  try {
+    const response = await $fetch("/api/products");
+    return response.success ? response.products : [];
+  } catch (error) {
+    console.error("Gagal mengambil produk:", error);
+    return [];
+  }
+});
+
+const computedProducts = computed(() => productsData.value || []);
+
+const { data: categoryData } = await useAsyncData("categories", async () => {
+  try {
+    const response = await $fetch("/api/categories");
+    return response.success ? response.categories : [];
+  } catch (error) {
+    console.error("Gagal mengambil Kategori:", error);
+    return [];
+  }
+});
+
+const computedCategory = computed(() => categoryData.value || []);
+
+/*const { data: sliderData } = await useAsyncData("sliders", async () => {
+  try {
+    const response = await $fetch("/api/sliders");
+    return response.success ? response.sliders : [];
+    if (sliderData.length > 0) {
+      startAutoSlide();
+    }
+  } catch (error) {
+    console.error("Gagal mengambil Slider:", error);
+    return [];
+  }
+});
+
+const computedSlider = computed(() => sliderData.value || []);
+*/
 // Mengambil produk berdasarkan pagination
-const fetchProducts = async (page = 1) => {
+/*const fetchProducts = async (page = 1) => {
   loading.value = true; // Set loading menjadi true saat mulai mengambil data
   try {
     const offset = (page - 1) * perPage;
@@ -78,7 +117,7 @@ const fetchProducts = async (page = 1) => {
   } finally {
     loading.value = false; // Set loading menjadi false setelah data selesai diambil
   }
-};
+};*/
 
 const fetchSlides = async () => {
   try {
@@ -101,7 +140,7 @@ const fetchSlides = async () => {
   }
 };
 
-const categories = ref([]); // Data kategori
+/*const categories = ref([]); // Data kategori
 
 const fetchCategories = async () => {
   try {
@@ -114,7 +153,7 @@ const fetchCategories = async () => {
   } catch (error) {
     console.error("Error fetching categories:", error);
   }
-};
+};*/
 
 // Auto-slide setiap 10 detik
 const startAutoSlide = () => {
@@ -144,13 +183,13 @@ const formatPrice = (price) => {
 };
 
 onMounted(() => {
-  fetchProducts(); // Ambil data untuk halaman pertama
+  //fetchProducts(); // Ambil data untuk halaman pertama
   
   // Tambahkan event listener untuk menangani perubahan ukuran layar
   window.addEventListener("resize", updatePerPage);
   
   fetchSlides();
-  fetchCategories();
+  //fetchCategories();
 });
 
 onUnmounted(() => {
@@ -234,7 +273,7 @@ onBeforeUnmount(() => {
 <div class="py-4 container mx-auto flex flex-col px-4">
   <div class="py-4 flex overflow-x-auto">
     <div
-      v-for="category in categories"
+      v-for="category in computedCategory"
       :key="category.id"
       class="px-1 rounded-2xl"
     >
@@ -250,11 +289,8 @@ onBeforeUnmount(() => {
 
   <!-- Produk -->
   <div class="container mx-auto flex px-4 py-4">
-    <div v-if="loading" class="w-full flex justify-center items-center py-4">
-      <div class="text-xl">Loading...</div> <!-- Menampilkan loading saat data sedang dimuat -->
-    </div>
-    <div v-else class="grid grid-cols-2 md:grid-cols-3 gap-4">
-      <div class="rounded-2xl" v-for="product in products" :key="product.id">
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div class="rounded-2xl" v-for="product in computedProducts" :key="product.id">
         <div class="hover:shadow-xl rounded-2xl">
           <nuxt-link :to="`/products/${product.id}`">
           <div>
