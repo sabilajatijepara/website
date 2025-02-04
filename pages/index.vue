@@ -15,8 +15,7 @@ useHead({
           { name: "keywords", content: "Mebel jepara, meubel jepara, kursi meja cafe, meja kursi sekolah, jasa pembuatan gazebo, jasa pembuatan bungalow, furniture custom" }, // Meta keywords
           { property: "og:title", content: "CV. Sabilajati Mebel Jepara — Meja Kursi Sekolah, Cafe, Gazebo, Bungalow" }, // Open Graph Title
           { property: "og:description", content: "Kami adalah produsen meja kursi sekolah, meja kursi cafe, serta gazebo dan bungalow" }, // Open
-          /* { property: "og:image", content: product.value.imageURL[0] }, //
-          Open Graph Image */
+          { property: "og:image", content: "https://res.cloudinary.com/doninmxbl/image/upload/kquaxae4iakjge8rlve6.png" }, 
         ],
         link: [
           {

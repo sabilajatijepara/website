@@ -20,8 +20,11 @@ export default defineNuxtConfig({
       privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
       clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
     },
+    BLOGGER_API_KEY: process.env.NUXT_BLOGGER_API_KEY, // Private (hanya di server)
+    BLOGGER_ID: process.env.NUXT_BLOGGER_ID, // Private
     // Jika perlu, tambahkan public runtime config
     public: {
+      BLOGGER_ID: process.env.NUXT_BLOGGER_ID,
       // Tambahkan variabel yang ingin diakses di client
     },
   },

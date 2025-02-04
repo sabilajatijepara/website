@@ -31,6 +31,7 @@
         <div class="space-y-1 pt-2">
           <div><nuxt-link :to="localePath('about')">{{ $t('About') }}</nuxt-link></div>
           <div><NuxtLinkLocale to="howorder">{{ $t('How To Order') }}</NuxtLinkLocale></div>
+          <div><NuxtLinkLocale to="blog">Blog</NuxtLinkLocale></div>
         </div>
       </div>
     </div>
