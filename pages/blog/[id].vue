@@ -18,7 +18,7 @@
               </svg>
             </li>
             <li class="inline-flex items-center">
-              <span class="text-wrap">{{ post?.title }}</span>
+              <span class="max-w-full truncate">{{ post?.title }}</span>
             </li>
           </ol>
         </div>
@@ -42,27 +42,35 @@
       </div>
     </div>
     <div class="py-4"></div>
-      <div class="flex flex-row text-gray-500">
+      <div class="flex flex-row text-gray-700 items-center">
         <div class="pr-1">
           <div class="">
-            <button class="px-4 py-2 rounded-full border text-center justify-center items-center inline-flex" @click="copyLink"><Icon name="uil:copy" />  <span class="px-1">Copy Link</span></button>
-                </div>
+            <button class="px-4 py-2 rounded-full border border-gray-500 text-center justify-center items-center inline-flex hover:bg-slate-300" @click="copyLink">
+              <Icon name="uil:copy" />  
+              <span class="px-1">
+                Copy Link
+              </span>
+            </button>
+          </div>
           </div>
           <div class="px-1">
-            <div class="px-2 py-2 rounded-full text-center">
+            <div class="px-2 py-2 rounded-full text-center hover:bg-slate-300">
               <button class="" @click="shareTwitter">
                 <Icon name="uil:twitter"/>
               </button>
             </div>
           </div>
           <div class="px-1">
-            <div class="px-2 py-2 rounded-full text-center">
-              <button class="" @click="shareFacebook"><Icon name="uil:facebook"/></button>
+            <div class="px-2 py-2 rounded-full text-center hover:bg-slate-300">
+              <button class="" @click="shareFacebook">
+                <Icon name="uil:facebook"/>
+              </button>
             </div>
           </div>
           <div class="px-1">
-            <div class="px-2 py-2 rounded-full text-center">
-              <button class="" @click="shareWhatsapp"><Icon name="uil:whatsapp"/>
+            <div class="px-2 py-2 rounded-full text-center hover:bg-slate-300">
+              <button class="" @click="shareWhatsapp">
+                <Icon name="uil:whatsapp"/>
               </button>
         </div>
       </div>
@@ -91,10 +99,52 @@ const { data: post } = await useAsyncData(`blogPost-${postId}`, async () => {
 
 // Menambahkan SEO
 useHead({
-  title: post.value?.title + " — CV. Sabilajati Mebel Jepara" || "Artikel Blog"+ " — CV. Sabilajati Mebel Jepara",
+  title: post.value?.title 
+    ? `${post.value.title} — CV. Sabilajati Mebel Jepara` 
+    : "Artikel Blog — CV. Sabilajati Mebel Jepara",
   meta: [
-    { name: "description", content: post.value?.content?.substring(0, 160) || "Baca artikel menarik dari blog kami." },
-    { name: 'og:image', content: "https://res.cloudinary.com/doninmxbl/image/upload/kquaxae4iakjge8rlve6.png" }, // Gambar pertama di artikel
+    { name: "description", content: post.value?.content 
+      ? post.value.content.replace(/<[^>]+>/g, "").substring(0, 160) 
+      : "Baca artikel menarik dari blog kami tentang mebel, desain interior, dan inspirasi rumah." 
+    },
+    { name: "keywords", content: post.value?.title 
+      ? `${post.value.title}, mebel, furniture, desain interior, Jepara, kayu jati` 
+      : "mebel, furniture, desain interior, kayu jati, Jepara" 
+    },
+    { name: "author", content: "CV. Sabilajati Mebel Jepara" },
+
+    // Open Graph (Facebook, LinkedIn)
+    { property: "og:title", content: post.value?.title 
+      ? `${post.value.title} — CV. Sabilajati Mebel Jepara` 
+      : "Artikel Blog — CV. Sabilajati Mebel Jepara" 
+    },
+    { property: "og:description", content: post.value?.content 
+      ? post.value.content.replace(/<[^>]+>/g, "").substring(0, 160) 
+      : "Baca artikel menarik dari blog kami tentang mebel, desain interior, dan inspirasi rumah." 
+    },
+    { property: "og:image", content: "https://res.cloudinary.com/doninmxbl/image/upload/kquaxae4iakjge8rlve6.png" 
+    }, 
+    { property: "og:url", content: `https://sabilajati.com/blog/${post.value?.id}` },
+    { property: "og:type", content: "article" },
+
+    // Twitter Card
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:title", content: post.value?.title 
+      ? `${post.value.title} — CV. Sabilajati Mebel Jepara` 
+      : "Artikel Blog — CV. Sabilajati Mebel Jepara" 
+    },
+    { name: "twitter:description", content: post.value?.content 
+      ? post.value.content.replace(/<[^>]+>/g, "").substring(0, 160) 
+      : "Baca artikel menarik dari blog kami tentang mebel, desain interior, dan inspirasi rumah." 
+    },
+    { name: "twitter:image", content: "https://res.cloudinary.com/doninmxbl/image/upload/kquaxae4iakjge8rlve6.png" 
+    },
+
+    // Robots (SEO)
+    { name: "robots", content: "index, follow" },
+
+    // Canonical URL (Menghindari duplikasi konten)
+    { rel: "canonical", href: `https://sabilajati.com/blog/${post.value?.id}` }
   ],
 });
 

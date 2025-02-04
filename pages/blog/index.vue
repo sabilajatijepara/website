@@ -1,7 +1,59 @@
 <script setup>
-const { data: posts } = await useAsyncData("blog", async () => {
-  const { success, posts } = await $fetch("/api/blog");
-  return success ? posts : [];
+definePageMeta({ ssr: true }); // Paksa SSR untuk render awal
+
+const route = useRoute();
+const router = useRouter();
+const currentPage = ref(parseInt(route.query.page) || 1);
+const limit = 5; // Jumlah post per halaman
+
+// Fetch data dari API
+const { data, pending, refresh } = useFetch(() => `/api/blog?page=${currentPage.value}&limit=${limit}`, {
+  key: `blog-page-${currentPage.value}`, // Gunakan key unik agar bisa di-cache
+});
+
+// Komputasi daftar artikel dan total halaman
+const posts = computed(() => data.value?.posts || []);
+const totalPages = computed(() => data.value?.totalPages || 1);
+
+// Watch perubahan halaman untuk fetch ulang
+watch(currentPage, async (newPage) => {
+  router.push({ query: { page: newPage } }, { replace: true }); // Perbarui URL tanpa reload
+  await refresh(); // Fetch ulang data tanpa refresh halaman
+});
+
+// Fungsi ubah halaman
+const changePage = (page) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page;
+  }
+};
+
+useHead({
+  title: "Blog — CV. Sabilajati Mebel Jepara",
+  meta: [
+    { name: "description", content: "Baca artikel menarik dari blog kami tentang mebel, desain interior, dan inspirasi rumah." },
+    { name: "keywords", content: "mebel, furniture, desain interior, kayu jati, kursi, meja, lemari, Jepara" },
+    { name: "author", content: "CV. Sabilajati Mebel Jepara" },
+
+    // Open Graph (Facebook, LinkedIn)
+    { property: "og:title", content: "Blog — CV. Sabilajati Mebel Jepara" },
+    { property: "og:description", content: "Baca artikel menarik dari blog kami tentang mebel, desain interior, dan inspirasi rumah." },
+    { property: "og:image", content: "https://res.cloudinary.com/doninmxbl/image/upload/kquaxae4iakjge8rlve6.png" },
+    { property: "og:url", content: "https://sabilajati.com/blog" },
+    { property: "og:type", content: "website" },
+
+    // Twitter Card
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:title", content: "Blog — CV. Sabilajati Mebel Jepara" },
+    { name: "twitter:description", content: "Baca artikel menarik dari blog kami tentang mebel, desain interior, dan inspirasi rumah." },
+    { name: "twitter:image", content: "https://res.cloudinary.com/doninmxbl/image/upload/kquaxae4iakjge8rlve6.png" },
+    
+    // Robots (SEO)
+    { name: "robots", content: "index, follow" },
+
+    // Canonical URL (Menghindari duplikasi konten)
+    { rel: "canonical", href: "https://sabilajati.com/blog" }
+  ],
 });
 </script>
 
@@ -12,45 +64,51 @@ const { data: posts } = await useAsyncData("blog", async () => {
   <div class="py-4 container mx-auto flex flex-col px-4">
     <div>
       <div class="py-2 px-3 bg-slate-300 rounded-lg">
-      <ol class="flex items-center whitespace-nowrap">
-        <li class="inline-flex items-center">
-          <span>{{ $t('Home') }}</span>
-          <svg class="shrink-0 size-5 text-gray-400 dark:text-neutral-600 mx-2" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M6 13L10 3" stroke="currentColor" stroke-linecap="round"></path>
-          </svg>
-        </li>
-        <li>
-          <span>Blog</span>
-        </li>
-      </ol>
+        <ol class="flex items-center whitespace-nowrap">
+          <li class="inline-flex items-center">
+            <span>{{ $t('Home') }}</span>
+            <svg class="shrink-0 size-5 text-gray-400 dark:text-neutral-600 mx-2" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M6 13L10 3" stroke="currentColor" stroke-linecap="round"></path>
+            </svg>
+          </li>
+          <li>
+            <span>Blog</span>
+          </li>
+        </ol>
       </div>
     </div>
     <div class="py-4"></div>
-    <div v-if="posts?.length > 0">
-      <div v-for="post in posts" :key="post.id" class="grid grid-cols-1 divide-y-2 gap-8 w-full">
-        <nuxt-link :to="`/blog/${post.id}`" class="py-4 rounded-lg hover:rounded-lg hover:bg-red-50/40 px-4 transition duration-300 hover:duration-300 space-y-2">
-          <div>
-            <span class="hover:underline text-2xl font-bold">
-              {{ post.title }}
-            </span>
-            <!--<p class="text-gray-600" v-html="post.content.substring(0, 150) + '...'"></p>-->
-          </div>
-          <div class="flex inline-flex justify-center items-center space-x-1">
-            <!--<div>by</div>
+    <div v-if="pending">
+      <p>Loading...</p>
+    </div>
+    <div v-else-if="posts?.length > 0">
+      <div class="divide-y">
+        <div v-for="post in posts" :key="post.id" class="flex flex-col">
+          <nuxt-link :to="`/blog/${post.id}`" class="py-4 rounded-lg hover:rounded-lg hover:bg-slate-300/40 px-4 transition duration-300 hover:duration-300 space-y-2">
             <div>
-              <img :src="post.author.image.url" class="rounded-full size-6"/>
+              <span class="hover:underline text-2xl font-bold">
+                {{ post.title }}
+              </span>
             </div>
-            <div class="font-semibold">
-              {{ post.author.displayName}}
-            </div>-->
-            <span class="text-gray-700">{{ post.formattedDate }}
-            </span>
-          </div>
-        </nuxt-link>
+            <div class="flex inline-flex justify-center items-center space-x-1">
+              <span class="text-gray-700">{{ post.formattedDate }}</span>
+            </div>
+          </nuxt-link>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="py-2"></div>
+      <div class="text-center flex justify-center">
+        <button class="gap-x-2 -ms-px text-sm md:text-base bg-transparent px-6 py-3 border border-black rounded-l-[32px] hover:bg-slate-300/60 focus:bg-red-200/60" @click="changePage(currentPage - 1)"
+        :class="{ 'bg-gray-300 text-gray-400 hover:bg-gray-300' : currentPage === 1 }" :disabled="currentPage === 1">Sebelumnya</button>
+        <span class="gap-x-2 -ms-px text-sm md:text-base bg-transparent px-6 py-3 border-y border-black hover:bg-slate-300/60 focus:bg-red-200/60">{{ currentPage }} / {{ totalPages }}</span>
+        <button class="gap-x-2 -ms-px text-sm md:text-base bg-transparent px-6 py-3 border border-black rounded-r-[32px] hover:bg-slate-300/60 focus:bg-red-200/60" @click="changePage(currentPage + 1)"
+        :class="{ 'bg-gray-300 text-gray-400 hover:bg-gray-300' : currentPage === totalPages }" :disabled="currentPage === totalPages">Berikutnya</button>
       </div>
     </div>
     <div v-else>
-      <p>Loading...</p>
+      <p>Tidak ada artikel.</p>
     </div>
   </div>
   <!-- Footer -->
@@ -58,3 +116,6 @@ const { data: posts } = await useAsyncData("blog", async () => {
     <Footer />
   </div>
 </template>
+
+<style scoped>
+</style>

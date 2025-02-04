@@ -229,23 +229,22 @@ onUnmounted(() => {
     <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
       <div class="rounded-2xl" v-for="product in products" :key="product.id">
         <div class="hover:shadow-xl rounded-2xl">
-          <nuxt-link :to="`/products/${product.id}`">
+          <NuxtLinkLocale :to="`/products/${product.id}`">
           <div>
-            <img :src="product.imageURL[0]" :alt="product.name" class="rounded-2xl" />
+            <img :src="product.imageURL[0]" :alt="product.name" class="rounded-2xl" loading="lazy" />
           </div>
           <div class="relative bg-gray-100 py-6 rounded-2xl border-4 md:border-8 border-white -mt-6 px-4">
             <div class="font-bold text-xl">{{ product.name }}</div>
             <div class="">{{ formatPrice(product.price) }}</div>
             <div class="pt-4">
-              <NuxtLinkLocale
-                :to="`/products/${product.id}`"
+              <span
                 class="bg-[#8b5a2b] px-4 py-2 rounded-full text-white"
               >
                 Detail
-              </NuxtLinkLocale>
+              </span>
             </div>
           </div>
-          </nuxt-link>
+          </NuxtLinkLocale>
         </div>
       </div>
     </div>
