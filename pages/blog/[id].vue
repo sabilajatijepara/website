@@ -142,8 +142,8 @@ useHead({
 
     // Robots (SEO)
     { name: "robots", content: "index, follow" },
-
-    // Canonical URL (Menghindari duplikasi konten)
+  ],
+  link: [
     { rel: "canonical", href: `https://sabilajati.com/blog/${post.value?.id}` }
   ],
 });

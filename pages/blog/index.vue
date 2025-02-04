@@ -50,8 +50,9 @@ useHead({
     
     // Robots (SEO)
     { name: "robots", content: "index, follow" },
-
-    // Canonical URL (Menghindari duplikasi konten)
+    
+  ],
+  link: [
     { rel: "canonical", href: "https://sabilajati.com/blog" }
   ],
 });
@@ -86,9 +87,9 @@ useHead({
         <div v-for="post in posts" :key="post.id" class="flex flex-col">
           <nuxt-link :to="`/blog/${post.id}`" class="py-4 rounded-lg hover:rounded-lg hover:bg-slate-300/40 px-4 transition duration-300 hover:duration-300 space-y-2">
             <div>
-              <span class="hover:underline text-2xl font-bold">
+              <h2 class="hover:underline text-2xl font-bold">
                 {{ post.title }}
-              </span>
+              </h2>
             </div>
             <div class="flex inline-flex justify-center items-center space-x-1">
               <span class="text-gray-700">{{ post.formattedDate }}</span>
@@ -108,7 +109,7 @@ useHead({
       </div>
     </div>
     <div v-else>
-      <p>Tidak ada artikel.</p>
+      <h2>Tidak ada artikel.</h2>
     </div>
   </div>
   <!-- Footer -->
