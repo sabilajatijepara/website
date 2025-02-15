@@ -11,11 +11,11 @@
         <NuxtLinkLocale to="/" class="hover:text-gray-300">{{ $t('Home') }}</NuxtLinkLocale>
         <NuxtLinkLocale to="/about" class="hover:text-gray-300">{{ $t('About') }}</NuxtLinkLocale>
         <NuxtLinkLocale to="/blog" class="hover:text-gray-300">Blog</NuxtLinkLocale>
-        <NuxtLinkLocale to="https://wa.me/+6285225208256" class="hover:text-gray-300">{{ $t('Contact') }}</NuxtLinkLocale>
+        <NuxtLinkLocale to="/contact" class="hover:text-gray-300">{{ $t('Contact') }}</NuxtLinkLocale>
       </nav>
 
       <!-- Mobile Menu Button -->
-      <NuxtLinkLocale to="/search" class="block"><Icon name="ri:search-line"><text>Search</text></Icon></NuxtLinkLocale>
+      <NuxtLinkLocale to="/search" class="block"><Icon name="ri:search-line"><title>Search</title></Icon></NuxtLinkLocale>
       <button
         class="block md:hidden focus:outline-none"
         @click="toggleMenu"

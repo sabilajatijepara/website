@@ -13,6 +13,12 @@ export default defineNuxtConfig({
   ssr: true,
   target: "server",
   
+  routeRules: {
+    '/contact-us': {
+      redirect: '/contact'
+    }
+  },
+  
   runtimeConfig: {
     // Variabel yang hanya tersedia di server (private)
     firebaseAdmin: {

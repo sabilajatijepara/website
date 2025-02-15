@@ -1,5 +1,5 @@
 <template>
-  <footer class="px-8 py-8 border-t">
+  <footer class="container mx-auto px-8 py-8 border-t">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 justify-between">
       <div>
         <div class="font-bold text-2xl">Sabilajati Jepara</div>
@@ -31,6 +31,7 @@
         <div class="space-y-1 pt-2">
           <div><nuxt-link :to="localePath('about')">{{ $t('About') }}</nuxt-link></div>
           <div><NuxtLinkLocale to="howorder">{{ $t('How To Order') }}</NuxtLinkLocale></div>
+          <div><NuxtLinkLocale to="contact">{{ $t('Contact') }}</NuxtLinkLocale></div>
           <div><NuxtLinkLocale to="blog">Blog</NuxtLinkLocale></div>
         </div>
       </div>
@@ -41,12 +42,12 @@
         <div class="space-x-4">
           <nuxt-link
           to="https://instagram.com/sabilajati_jepara"><Icon
-          name="ri:instagram-line"/></nuxt-link>
+          name="ri:instagram-line"><title>Instagram</title></Icon></nuxt-link>
           <nuxt-link
           to="https://tiktok.com/@sabilajatijepara"><Icon
-          name="ri:tiktok-line"/></nuxt-link>
+          name="ri:tiktok-line"><title>Tiktok</title></Icon></nuxt-link>
         </div>
-        <div class="pt-2">© 2024 Sabilajati Jepara.</div>
+        <div class="pt-2">© 2025 Sabilajati Jepara.</div>
         <div>All Right Reserved.</div>
       </div>
     </div>

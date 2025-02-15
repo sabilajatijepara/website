@@ -23,11 +23,43 @@ useHead({
           href: 'https://sabilajati.com'
           },
         ],
+    script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "CV. Sabilajati Mebel Jepara",
+        "url": "https://sabilajati.com",
+        "logo": "https://res.cloudinary.com/doninmxbl/image/upload/kquaxae4iakjge8rlve6.png",
+        "description": "Kami adalah produsen meja kursi sekolah, meja kursi cafe, serta gazebo dan bungalow.",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Jl. Raya Jepara - Bangsri KM 6",
+          "addressLocality": "Jepara",
+          "addressRegion": "Jawa Tengah",
+          "postalCode": "59452",
+          "addressCountry": "ID"
+        },
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+62 852-2520-8256",
+          "contactType": "customer service"
+        },
+        "sameAs": [
+          "https://www.facebook.com/sabilajatimebeljepara",
+          "https://www.instagram.com/sabilajati_jepara",
+          "https://wa.me/6285225208256"
+        ]
+      })
+    }
+  ]
 });
 
 const slides = ref([]);
 const currentIndex = ref(0);
 const prevIndex = ref(null);
+const loadings = true;
 
 let autoSlideInterval = null;
 
@@ -200,8 +232,9 @@ onUnmounted(() => {
           :class="{
             'bg-white': currentIndex === index,
             'bg-gray-400': currentIndex !== index,
-          }"
-        />
+          }">
+           
+        </button>
       </div>
     </div>
   </div>
@@ -231,7 +264,7 @@ onUnmounted(() => {
         <div class="hover:shadow-xl rounded-2xl">
           <NuxtLinkLocale :to="`/products/${product.id}`">
           <div>
-            <img :src="product.imageURL[0]" :alt="product.name" class="rounded-2xl" loading="lazy" />
+            <img :src="product.imageURL[0]" :alt="product.name" class="rounded-2xl" width="512" height="512" loading="lazy" />
           </div>
           <div class="relative bg-gray-100 py-6 rounded-2xl border-4 md:border-8 border-white -mt-6 px-4">
             <div class="font-bold text-xl">{{ product.name }}</div>
@@ -274,8 +307,7 @@ onUnmounted(() => {
   <div class="py-2"></div>
   <div class="py-4">
     <div class="px-4 container mx-auto flex">
-      <div class="bg-slate-300 overflow-hidden rounded-2xl px-6 md:px-12 py-8
-      md:py-12">
+      <div class="bg-slate-300 overflow-hidden rounded-2xl px-6 md:px-12 py-8 md:py-12">
         <div class="relative grid grid-cols-2 gap-2 justify-items-center content-center w-full">
           <div class="place-items-center">
             <h2 class="relative text-2xl font-bold z-40 md:text-4xl backdrop-invert-0 drop-shadow-2xl">
@@ -284,7 +316,7 @@ onUnmounted(() => {
           </div>
           <div class="absolute z-10 inset-y-0 right-0">
             <img class="size-48 md:size-64"
-            src="https://res.cloudinary.com/doninmxbl/image/upload/custom_ebtmqw.png"
+            src="https://res.cloudinary.com/doninmxbl/image/upload/custom_ebtmqw.png" height="512" width="512"
             alt="Kursi Kotak" />
           </div>
         </div>

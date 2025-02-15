@@ -11,6 +11,7 @@
   "Home": "Home",
   "Buy WA": "Buy via WhatsApp",
   "Loading": "Loading..",
+  "Location": "Location",
   "No Product": "Tidak Ada Produk",
   "Product NF": "Product not found",
   "Other Product": "Other Products",
@@ -27,5 +28,39 @@
   "How Order 4": "The message will be automatically filled in, but you can edit the message content or directly press the send button on the WhatsApp application.",
   "How Order 5": "We will respond to your message as soon as possible.",
   "Happy Shopping": "Happy shopping!",
-  "waText": "Hello! I want to order {product}"
+  "waText": "Hello! I want to order {product}",
+  "faqs": [
+    {
+      "question": "What types of furniture are available?",
+      "answer": "We provide various types of furniture such as school desks and chairs, cafe tables and chairs, gazebos, bungalows, and custom furniture as per request."
+    },
+    {
+      "question": "Can I order custom furniture designs?",
+      "answer": "Yes, we accept custom orders based on the desired design, size, and materials. Please contact us for further consultation."
+    },
+    {
+      "question": "How long does it take to produce custom furniture?",
+      "answer": "Production time varies depending on the type and complexity of the design. Generally, it takes about 2-4 weeks."
+    },
+    {
+      "question": "Is a down payment (DP) required before production?",
+      "answer": "Yes."
+    },
+    {
+      "question": "Does the listed price include shipping costs?",
+      "answer": "The listed price does not include shipping costs. The shipping fee will be adjusted according to the destination location."
+    },
+    {
+      "question": "Can you ship all over Indonesia and Worldship?",
+      "answer": "Yes, we can ship throughout Indonesia using trusted shipping partners."
+    },
+    {
+      "question": "What if the product received is damaged or defective?",
+      "answer": "If there is damage due to production or shipping, please contact us within 24 hours of receiving the item, along with photos or videos as proof."
+    },
+    {
+      "question": "Is there a physical store that can be visited?",
+      "answer": "Yes, you can visit our showroom/workshop in Jepara."
+    }
+  ]
 }
