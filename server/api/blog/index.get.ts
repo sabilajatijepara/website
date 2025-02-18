@@ -43,16 +43,12 @@ export default defineEventHandler(async (event) => {
 });
 
 // Fungsi untuk memformat tanggal
-function formatDate(publishedDate: string): string {
-  const date = new Date(publishedDate);
-  const months = [
-    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-  ];
-
-  const day = date.getDate();
-  const month = months[date.getMonth()];
-  const year = date.getFullYear();
-
-  return `${day} ${month} ${year}`;
+function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat("id-ID", {
+    weekday: "long", // Hari dalam bahasa Indonesia (Senin, Selasa, dll.)
+    day: "2-digit",  // Tanggal (01, 02, dst.)
+    month: "long",   // Nama bulan (Januari, Februari, dst.)
+    year: "numeric", // Tahun (2025, 2026, dst.)
+  }).format(date);
 }
