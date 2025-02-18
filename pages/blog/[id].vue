@@ -93,7 +93,7 @@ const route = useRoute();
 const postId = route.params.id;
 
 // Mengambil data artikel berdasarkan ID
-const { data: post } = useAsyncData(`blogPost-${postId}`, async () => {
+const { data: post } = await useAsyncData(`blogPost-${postId}`, async () => {
   const res = await $fetch(`/api/blog/${postId}`);
   return res;
 });
