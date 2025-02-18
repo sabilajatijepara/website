@@ -85,7 +85,7 @@ useHead({
     <div v-else-if="posts?.length > 0">
       <div class="divide-y">
         <div v-for="post in posts" :key="post.id" class="flex flex-col">
-          <nuxt-link :to="`/blog/${post.id}/${post.slug}`" class="py-4 rounded-lg hover:rounded-lg hover:bg-slate-300/40 px-4 transition duration-300 hover:duration-300 space-y-2">
+          <nuxt-link :to="`/blog/${post.id}`" class="py-4 rounded-lg hover:rounded-lg hover:bg-slate-300/40 px-4 transition duration-300 hover:duration-300 space-y-2">
             <div>
               <h2 class="hover:underline text-2xl font-bold">
                 {{ post.title }}
