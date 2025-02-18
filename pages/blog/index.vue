@@ -7,7 +7,7 @@ const currentPage = ref(parseInt(route.query.page) || 1);
 const limit = 5; // Jumlah post per halaman
 
 // Fetch data dari API
-const { data, pending, refresh } = useFetch(() => `/api/blog?page=${currentPage.value}&limit=${limit}`, {
+const { data, pending, refresh } = useFetch(() => `/api/blogger?page=${currentPage.value}&limit=${limit}`, {
   key: `blog-page-${currentPage.value}`, // Gunakan key unik agar bisa di-cache
 });
 
@@ -45,7 +45,7 @@ useHead({
     // Twitter Card
     { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:title", content: "Blog — CV. Sabilajati Mebel Jepara" },
-    { name: "twitter:description", content: "Baca artikel menarik dari blog kami tentang mebel, desain interior, dan inspirasi rumah." },
+    { name: "twitter:description", content: "Baca artikel menarik dari blog kami dari tentang mebel, desain interior, dan inspirasi rumah." },
     { name: "twitter:image", content: "https://res.cloudinary.com/doninmxbl/image/upload/kquaxae4iakjge8rlve6.png" },
     
     // Robots (SEO)
@@ -85,14 +85,14 @@ useHead({
     <div v-else-if="posts?.length > 0">
       <div class="divide-y">
         <div v-for="post in posts" :key="post.id" class="flex flex-col">
-          <nuxt-link :to="`/blog/${post.id}`" class="py-4 rounded-lg hover:rounded-lg hover:bg-slate-300/40 px-4 transition duration-300 hover:duration-300 space-y-2">
+          <nuxt-link :to="`/blog/${post.id}/${post.slug}`" class="py-4 rounded-lg hover:rounded-lg hover:bg-slate-300/40 px-4 transition duration-300 hover:duration-300 space-y-2">
             <div>
               <h2 class="hover:underline text-2xl font-bold">
                 {{ post.title }}
               </h2>
             </div>
             <div class="flex inline-flex justify-center items-center space-x-1">
-              <span class="text-gray-700">{{ post.formattedDate }}</span>
+              <span class="text-gray-700">{{ post.published }}</span>
             </div>
           </nuxt-link>
         </div>

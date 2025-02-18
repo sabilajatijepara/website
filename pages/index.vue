@@ -59,7 +59,7 @@ useHead({
 const slides = ref([]);
 const currentIndex = ref(0);
 const prevIndex = ref(null);
-const loadings = true;
+const loadings = ref(true);
 
 let autoSlideInterval = null;
 
