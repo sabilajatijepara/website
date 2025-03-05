@@ -1,5 +1,9 @@
 <script setup>
+import { useRouter } from "#app";
+  
 const { data } = await useFetch("/api/analytics");
+
+const router = useRouter();
 
 definePageMeta({
   middleware: "auth",
