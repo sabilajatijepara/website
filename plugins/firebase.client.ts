@@ -1,6 +1,6 @@
 import { defineNuxtPlugin } from "#app";
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, timestamp } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
 

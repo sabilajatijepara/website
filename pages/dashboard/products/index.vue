@@ -104,6 +104,10 @@ onMounted(() => {
       <nuxt-link to="/dashboard/slider" class="px-4 py-2 bg-green-600
       rounded-full text-white">Slider</nuxt-link>
     </div>
+        <div>
+      <nuxt-link to="/dashboard/analytics" class="px-4 py-2 bg-green-600
+      rounded-full text-white">Analisis</nuxt-link>
+    </div>
   </div>
   <div class="px-3 py-3">
   <div class="overflow-x-auto rounded-xl">
