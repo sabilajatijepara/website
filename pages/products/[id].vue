@@ -128,7 +128,9 @@ const formatPrice = (price) => {
             <div class="py-2"></div>
             <div class="font-bold text-xl">{{ $t('Description') }}</div>
             <div class="py-1"></div>
-            <div class="text-base md:text-xl">{{ product.description }}</div>
+            <div class="text-base md:text-xl whitespace-pre-line">
+              {{ product.description }}
+            </div>
             <div class="py-2"></div>
             <div class="py-4">
               <div class="flex justify-between space-x-1">
