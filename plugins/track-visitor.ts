@@ -18,6 +18,14 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       console.log("⏩ Skipping tracking for dashboard pages.");
       return;
     }
+    
+    if (currentPage.startsWith("/masuk")) {
+      return;
+    }
+    
+    if (currentPage.startsWith("/api")) {
+      return;
+    }
 
     // Fetch data IP dan lokasi dari API internal
     const ipRes = await fetch("/api/ip");

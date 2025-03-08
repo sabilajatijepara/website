@@ -3,6 +3,8 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter, useNuxtApp } from '#app';
 import { collection, query, getDocs, deleteDoc, doc } from "firebase/firestore";
 
+import NavBarDash from "../components/NavBarDash"
+
 const slides = ref([]);
 const currentIndex = ref(0);
 const prevIndex = ref(null);
@@ -83,18 +85,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-8 bg-[#FEFEFE]">
-    <div class="pb-4">
-      <div class="w-full text-black">
-        <div class="flex justify-start items-center">
-          <button
-            class="flex bg-black/20 backdrop-blur-2xl rounded-full px-4 py-3 text-white"
-            @click="router.back"
-          >
-            Back
-          </button>
-        </div>
-      </div>
+  <div class="flex">
+    <NavBarDash />
+  </div>
+  <div class="flex-1 p-8 container mx-auto">
+    <div class="py-6">
     </div>
     <!-- Slider Section -->
     <div class="relative flex justify-center items-center w-full h-[40vh] bg-black rounded-3xl overflow-hidden mb-8">

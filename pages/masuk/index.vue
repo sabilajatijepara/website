@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useRouter } from "#app";
+import { useRouter, useCookie } from "#app";
 
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
@@ -10,6 +10,7 @@ const password = ref("");
 const error = ref("");
 const isLoading = ref(false);
 const router = useRouter();
+const userToken = useCookie("userToken");
 
 // Mengakses Firebase Authentication yang sudah di-inject
 const { $auth } = useNuxtApp();  // Mengakses objek auth dari NuxtApp
@@ -26,9 +27,15 @@ const handleLogin = async () => {
 
   try {
     // Pastikan menggunakan auth dari useNuxtApp()
-    await signInWithEmailAndPassword($auth, email.value, password.value);
+    const { user } = await signInWithEmailAndPassword($auth, email.value, password.value);
+    
+    // Ambil token ID dari Firebase
+    const token = await user.getIdToken();
+    //console.log(token);
+    // Simpan token di cookies agar tetap login meskipun refresh
+    userToken.value = token;
     alert("Login berhasil!");
-    router.push("/dashboard/products"); // Redirect ke dashboard
+    router.push("/dashboard"); // Redirect ke dashboard
   } catch (err) {
     error.value = "Login gagal. Periksa email dan password Anda.";
     console.error("Error during login:", err);

@@ -3,6 +3,8 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { collection, getDocs, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 
+import NavBarDash from "../components/NavBarDash"
+
 const { $db } = useNuxtApp();
 
 // State management
@@ -115,20 +117,12 @@ onMounted(fetchCategories);
 </script>
 
 <template>
-  <div class="p-8">
-    <!-- Back Button -->
-    <div class="w-full text-black">
-      <div class="flex justify-start items-center">
-        <button
-          class="flex bg-black/20 backdrop-blur-2xl rounded-full px-4 py-3 text-white"
-          @click="router.back()"
-        >
-          Back
-        </button>
-      </div>
-    </div>
+  <div class="flex">
+    <NavBarDash />
+  </div>
+  <div class="flex-1 p-8 container mx-auto">
 
-    <div class="py-2"></div>
+    <div class="py-6"></div>
     <h1 class="text-2xl font-bold mb-6">Manage Categories</h1>
 
     <!-- Add Category Form -->

@@ -3,6 +3,8 @@ import { ref, onMounted } from "vue";
 import { useRouter, useNuxtApp } from "#app";
 import { collection, getDocs, deleteDoc, doc, query, orderBy } from "firebase/firestore";
 
+import NavBarDash from "../components/NavBarDash"
+
 const { $db, $auth } = useNuxtApp();
 const router = useRouter();
 
@@ -78,8 +80,11 @@ onMounted(() => {
 </script>
 
 <template>
+  <div class="flex">
+    <NavBarDash />
+  </div>
   <div class="px-4 py-2">
-    <div className="flex justify-between items-center">
+    <div className="flex-1 justify-between items-center">
         <div>
           Dashboard
         </div>
@@ -91,25 +96,7 @@ onMounted(() => {
       </div>
   </div>
   <div class="py-2"></div>
-  <div class="px-4 py-4 grid grid-cols-3 gap-4">
-    <div>
-      <nuxt-link to="/dashboard/products/add" class="px-4 py-2 bg-green-600
-      rounded-full text-white text-nowrap">Add Product</nuxt-link>
-    </div>
-    <div>
-      <nuxt-link to="/dashboard/categories" class="px-4 py-2 bg-green-600
-      rounded-full text-white">Category</nuxt-link>
-    </div>
-    <div>
-      <nuxt-link to="/dashboard/slider" class="px-4 py-2 bg-green-600
-      rounded-full text-white">Slider</nuxt-link>
-    </div>
-        <div>
-      <nuxt-link to="/dashboard/analytics" class="px-4 py-2 bg-green-600
-      rounded-full text-white">Analisis</nuxt-link>
-    </div>
-  </div>
-  <div class="px-3 py-3">
+  <div class="px-3 py-3 container mx-auto flex-1">
   <div class="overflow-x-auto rounded-xl">
     <table class="w-full border-collapse border border-gray-300">
       <thead>
