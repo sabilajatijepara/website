@@ -29,6 +29,8 @@
   "How Order 5": "We will respond to your message as soon as possible.",
   "Happy Shopping": "Happy shopping!",
   "waText": "Hello! I want to order {product}",
+  "Next": "Next",
+  "Previous": "Previous",
   "faqs": [
     {
       "question": "What types of furniture are available?",

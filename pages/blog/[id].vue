@@ -101,8 +101,8 @@ const { data: post } = await useAsyncData(`blogPost-${postId}`, async () => {
 // Menambahkan SEO
 useHead({
   title: post.value?.title 
-    ? `${post.value.title} — CV. Sabilajati Mebel Jepara` 
-    : "Artikel Blog — CV. Sabilajati Mebel Jepara",
+    ? `${post.value.title} — Sabilajati Mebel Jepara` 
+    : "Artikel Blog — Sabilajati Mebel Jepara",
   meta: [
     { name: "description", content: post.value?.content 
       ? post.value.content.replace(/<[^>]+>/g, "").substring(0, 160) 
@@ -116,8 +116,8 @@ useHead({
 
     // Open Graph (Facebook, LinkedIn)
     { property: "og:title", content: post.value?.title 
-      ? `${post.value.title} — CV. Sabilajati Mebel Jepara` 
-      : "Artikel Blog — CV. Sabilajati Mebel Jepara" 
+      ? `${post.value.title} — Sabilajati Mebel Jepara` 
+      : "Artikel Blog — Sabilajati Mebel Jepara" 
     },
     { property: "og:description", content: post.value?.content 
       ? post.value.content.replace(/<[^>]+>/g, "").substring(0, 160) 
@@ -131,8 +131,8 @@ useHead({
     // Twitter Card
     { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:title", content: post.value?.title 
-      ? `${post.value.title} — CV. Sabilajati Mebel Jepara` 
-      : "Artikel Blog — CV. Sabilajati Mebel Jepara" 
+      ? `${post.value.title} — Sabilajati Mebel Jepara` 
+      : "Artikel Blog — Sabilajati Mebel Jepara" 
     },
     { name: "twitter:description", content: post.value?.content 
       ? post.value.content.replace(/<[^>]+>/g, "").substring(0, 160) 

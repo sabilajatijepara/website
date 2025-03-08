@@ -1,4 +1,4 @@
-<template>
+<template class="antialiased">
   <NuxtPage />
 </template>
 

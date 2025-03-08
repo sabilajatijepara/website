@@ -9,11 +9,11 @@ const { $db } = useNuxtApp();
 
 // SEO
 useHead({
-        title: "CV. Sabilajati Mebel Jepara — Meja Kursi Sekolah, Cafe, Gazebo, Bungalow", // Title halaman
+        title: "Sabilajati Mebel Jepara — Meja Kursi Sekolah, Cafe, Gazebo, Bungalow", // Title halaman
         meta: [
           { name: "description", content: "Kami adalah produsen meja kursi sekolah, meja kursi cafe, serta gazebo dan bungalow" },
           { name: "keywords", content: "Mebel jepara, meubel jepara, kursi meja cafe, meja kursi sekolah, jasa pembuatan gazebo, jasa pembuatan bungalow, furniture custom" }, // Meta keywords
-          { property: "og:title", content: "CV. Sabilajati Mebel Jepara — Meja Kursi Sekolah, Cafe, Gazebo, Bungalow" }, // Open Graph Title
+          { property: "og:title", content: "Sabilajati Mebel Jepara — Meja Kursi Sekolah, Cafe, Gazebo, Bungalow" }, // Open Graph Title
           { property: "og:description", content: "Kami adalah produsen meja kursi sekolah, meja kursi cafe, serta gazebo dan bungalow" }, // Open
           { property: "og:image", content: "https://res.cloudinary.com/doninmxbl/image/upload/kquaxae4iakjge8rlve6.png" }, 
         ],
@@ -29,7 +29,7 @@ useHead({
       children: JSON.stringify({
         "@context": "https://schema.org",
         "@type": "Organization",
-        "name": "CV. Sabilajati Mebel Jepara",
+        "name": "Sabilajati Mebel Jepara",
         "url": "https://sabilajati.com",
         "logo": "https://res.cloudinary.com/doninmxbl/image/upload/kquaxae4iakjge8rlve6.png",
         "description": "Kami adalah produsen meja kursi sekolah, meja kursi cafe, serta gazebo dan bungalow.",
@@ -249,7 +249,7 @@ onUnmounted(() => {
     >
       <nuxt-link
         :to="`/categories/${category.name}`"
-        class="px-4 py-3 rounded-xl bg-slate-300 font-bold text-nowrap"
+        class="px-4 py-3 rounded-full font-bold border border-black hover:bg-slate-300 text-nowrap"
       >
         {{ category.name }}
       </nuxt-link>
@@ -285,23 +285,11 @@ onUnmounted(() => {
 
   <!-- Pagination -->
   <div class="container mx-auto flex justify-center py-6">
-    <div class="flex space-x-4">
-      <button
-        :disabled="currentPage === 1"
-        @click="goToPage(currentPage - 1)"
-        class="px-4 py-2 bg-gray-300 text-gray-600 rounded-lg"
-      >
-        Previous
-      </button>
-      <span class="py-2">{{ currentPage }} / {{ totalPages }}</span>
-      <button
-        :disabled="currentPage === totalPages"
-        @click="goToPage(currentPage + 1)"
-        class="px-4 py-2 bg-gray-300 text-gray-600 rounded-lg"
-      >
-        Next
-      </button>
-    </div>
+    <button class="gap-x-2 -ms-px text-sm md:text-base bg-transparent px-6 py-3 border border-black rounded-l-[32px] hover:bg-slate-300/60 focus:bg-red-200/60" @click="goToPage(currentPage - 1)"
+        :class="{ 'bg-gray-300 text-gray-400 hover:bg-gray-300' : currentPage === 1 }" :disabled="currentPage === 1">{{ $t('Previous') }}</button>
+        <span class="gap-x-2 -ms-px text-sm md:text-base bg-transparent px-6 py-3 border-y border-black hover:bg-slate-300/60 focus:bg-red-200/60">{{ currentPage }} / {{ totalPages }}</span>
+        <button class="gap-x-2 -ms-px text-sm md:text-base bg-transparent px-6 py-3 border border-black rounded-r-[32px] hover:bg-slate-300/60 focus:bg-red-200/60" @click="goToPage(currentPage + 1)"
+        :class="{ 'bg-gray-300 text-gray-400 hover:bg-gray-300' : currentPage === totalPages }" :disabled="currentPage === totalPages">{{ $t('Next') }}</button>
   </div>
   
   <div class="py-2"></div>
