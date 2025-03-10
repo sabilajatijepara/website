@@ -97,6 +97,11 @@ onMounted(() => {
   </div>
   <div class="py-2"></div>
   <div class="px-3 py-3 container mx-auto flex-1">
+  <div>
+       <nuxt-link to="/dashboard/products/add" class="px-4 py-2 bg-green-600
+       rounded-full text-white text-nowrap">Add Product</nuxt-link>
+  </div>
+  <div class="py-4"></div>
   <div class="overflow-x-auto rounded-xl">
     <table class="w-full border-collapse border border-gray-300">
       <thead>
