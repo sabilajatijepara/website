@@ -16,6 +16,7 @@
         <div class="text-xl font-bold py-2">Message</div>
         <div>(+62)85225208256</div>
         <div>sabilajatijepara@gmail.com</div>
+        <div>admin@sabilajati.com</div>
       </div>
       <div class="border-2 border-black px-4 py-6">
         <div><Icon name="tabler:map-pin" size="3rem"></Icon></div>

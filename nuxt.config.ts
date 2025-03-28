@@ -7,7 +7,25 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@nuxtjs/google-fonts',
     '@nuxtjs/i18n',
+    '@nuxtjs/sitemap',
   ],
+  
+  sitemap: {
+    path: "sitemap.xml",
+    hostname: "https://sabilajati.com", // Ganti dengan domain asli
+    gzip: true,
+    xsl: false,
+    xslTips: false,
+    i18n: false,
+    exclude: ["/dashboard/**"], // Jangan tampilkan halaman admin
+    sources: [
+        {
+          url: "https://sabilajati.com/api/blogger",
+          path: "/blog/[id]/[slug]", // Format URL yang sesuai
+          cacheTtl: 60 * 60, // Cache selama 1 jam
+        },
+      ],
+  },
   
   ssr: true,
   target: "server",

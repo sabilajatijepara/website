@@ -52,6 +52,9 @@
         {{ $t('Info About') }}
       </div>
     </div>
+    <div>
+      Embed PDF
+    </div>
   </div>
   <div>
     <Footer />
