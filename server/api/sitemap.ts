@@ -2,19 +2,19 @@ export default defineEventHandler(async (event) => {
   try {
     // Fetch data dari API Blogger dan Produk
     const [blogRes, productRes] = await Promise.all([
-      $fetch("https://sbjbeta.vercel.app/api/blogger/sitemap"),
+      $fetch("https://sabilajatimebeljepara.vercel.app/api/blogger/sitemap"),
       /*$fetch("https://sbjbeta.vercel.app/api/products/sitemap"),*/
     ]);
     
     // **🔹 Daftar Halaman Statis**
     const staticRoutes = [
-      { loc: "https://sabilajati.com/", priority: 1.0 },
-      { loc: "https://sabilajati.com/blog", priority: 1.0 },
-      { loc: "https://sabilajati.com/about", priority: 0.9 },
-      { loc: "https://sabilajati.com/contact", priority: 0.9 },
-      { loc: "https://sabilajati.com/howorder", priority: 0.8 },
+      { loc: "https://sabilajati.com/", priority: 1.0, lastmod: new Date().toISOString(), changefreq: "weekly" },
+      { loc: "https://sabilajati.com/blog", priority: 1.0, lastmod: new Date().toISOString(), changefreq: "weekly" },
+      { loc: "https://sabilajati.com/about", priority: 0.9, lastmod: new Date().toISOString(), changefreq: "weekly" },
+      { loc: "https://sabilajati.com/contact", priority: 0.9, lastmod: new Date().toISOString(), changefreq: "weekly" },
+      { loc: "https://sabilajati.com/howorder", priority: 0.8, lastmod: new Date().toISOString(), changefreq: "weekly" },
       { loc: "https://sabilajati.com/faq", priority: 0.8 },
-      { loc: "https://sabilajati.com/search", priority: 0.8 },
+      { loc: "https://sabilajati.com/search", priority: 0.8, lastmod: new Date().toISOString(), changefreq: "weekly" },
     ];
 
     // Format URL untuk sitemap

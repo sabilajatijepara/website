@@ -18,7 +18,7 @@ export default defineNuxtConfig({
     autoI18n: false,
     exclude: ["/dashboard/**", "/masuk", "/en/dashboard/**", "/en/masuk"], // Jangan tampilkan halaman admin
     sources: [
-      'https://sbjbeta.vercel.app/api/sitemap'
+      'https://sabilajatimebeljepara.vercel.app/api/sitemap'
       ],
   },
   
