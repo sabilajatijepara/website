@@ -52,8 +52,22 @@
         {{ $t('Info About') }}
       </div>
     </div>
-    <div>
-      Embed PDF
+    <div class="bg-gray-100 rounded-xl">
+      <iframe
+        src="https://docs.google.com/gview?url=https://sbjbeta.vercel.app/pdf/company-profile.pdf&embedded=true"
+        class="w-full h-56 rounded-xl">
+      </iframe>
+      <div class="py-4 px-4">
+        <div class="font-bold py-2 text-xl md:text-3xl">
+          Company Profile Sabilajati
+        </div>
+        <div class="py-2 text-gray-500">2.35 MB • PDF</div>
+        <div class="py-2">
+          <nuxt-link to="/pdf/company-profile.pdf" class="bg-blue-300 rounded-xl px-3 py-2">
+          Download
+          </nuxt-link>
+        </div>
+      </div>
     </div>
   </div>
   <div>

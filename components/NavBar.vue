@@ -97,7 +97,7 @@
           @click="toggleMenu"
         >{{ $t('How To Order') }}</NuxtLinkLocale>
         <NuxtLinkLocale
-          to="https://wa.me/+6285225208256"
+          to="/contact"
           class="hover:text-gray-400 text-2xl"
           @click="toggleMenu"
         >{{ $t('Contact') }}</NuxtLinkLocale>
