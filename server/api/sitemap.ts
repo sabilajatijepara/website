@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
       { loc: "https://sabilajati.com/about", priority: 0.9, lastmod: new Date().toISOString(), changefreq: "weekly" },
       { loc: "https://sabilajati.com/contact", priority: 0.9, lastmod: new Date().toISOString(), changefreq: "weekly" },
       { loc: "https://sabilajati.com/howorder", priority: 0.8, lastmod: new Date().toISOString(), changefreq: "weekly" },
-      { loc: "https://sabilajati.com/faq", priority: 0.8 },
+      { loc: "https://sabilajati.com/faq", priority: 0.8, lastmod: new Date().toISOString(), changefreq: "weekly" },
       { loc: "https://sabilajati.com/search", priority: 0.8, lastmod: new Date().toISOString(), changefreq: "weekly" },
     ];
 
