@@ -3,6 +3,8 @@ import { ref, computed, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useAsyncData } from '#app';
 
+import { getCloudinaryPath } from '~/utils/cloudinary'
+
 import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 
 const { $db } = useNuxtApp();
@@ -55,6 +57,7 @@ useHead({
     }
   ]
 });
+
 
 const slides = ref([]);
 const currentIndex = ref(0);
@@ -136,7 +139,9 @@ const { data: productsData, refresh } = await useAsyncData(
       };
     }
     
+    
     return { products: [], totalProducts: 0, totalPages: 0 };
+    
   },
   {
     key: computed(() => currentPage.value), // Memastikan refresh saat page berubah
@@ -264,7 +269,17 @@ onUnmounted(() => {
         <div class="hover:shadow-xl rounded-2xl">
           <NuxtLinkLocale :to="`/products/${product.id}`">
           <div>
-            <img :src="product.imageURL[0]" :alt="product.name" class="rounded-2xl" width="512" height="512" loading="lazy" />
+            <!--<img :src="product.imageURL[0]" :alt="product.name" class="rounded-2xl" width="512" height="512" loading="lazy" />-->
+            <NuxtImg
+              provider="cloudinary"
+              :src="getCloudinaryPath(product.imageURL[0])"
+              :alt="product.name"
+              width="400"
+              height="400"
+              format="webp"
+              quality="auto"
+              loading="lazy"
+            />
           </div>
           <div class="relative bg-gray-100 py-6 rounded-2xl border-4 md:border-8 border-white -mt-6 px-4">
             <div class="font-bold text-xl">{{ product.name }}</div>
@@ -303,9 +318,17 @@ onUnmounted(() => {
               </h2>
           </div>
           <div class="absolute z-10 inset-y-0 right-0">
-            <img class="size-48 md:size-64"
-            src="https://res.cloudinary.com/doninmxbl/image/upload/custom_ebtmqw.png" height="512" width="512"
-            alt="Kursi Kotak" />
+            <NuxtImg
+              provider="cloudinary"
+              src="https://res.cloudinary.com/doninmxbl/image/upload/custom_ebtmqw.png"
+              alt="Kursi Kotak"
+              class="size-48 md:size-64"
+              width="400"
+              height="400"
+              format="webp"
+              quality="auto"
+              loading="lazy"
+            />
           </div>
         </div>
         <div class="py-4"></div>

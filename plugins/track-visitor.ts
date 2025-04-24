@@ -31,7 +31,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     const ipRes = await fetch("/api/ip");
     const ipData = await ipRes.json();
 
-    console.log(ipData); // Debugging
+    //console.log(ipData); // Debugging
 
     // Data visitor yang akan disimpan
     const visitorInfo = {

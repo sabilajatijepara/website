@@ -107,7 +107,16 @@ const formatPrice = (price) => {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div class="space-y-2">
             <div class="rounded-2xl overflow-hidden">
-              <img :src="selectedImage" :alt="product.name" />
+              <!--<img :src="selectedImage" :alt="product.name" />-->
+              <NuxtImg
+                provider="cloudinary"
+                :src="selectedImage"
+                :alt="product.name"
+                width="400"
+                
+                format="webp"
+                quality="auto"
+              />
             </div>
             <div class="flex space-x-2 overflow-x-auto py-2">
               <div
@@ -116,7 +125,16 @@ const formatPrice = (price) => {
                 @click="selectedImage = image"
                 class="cursor-pointer flex-none w-20 h-20 rounded-xl overflow-hidden"
               >
-                <img :src="image" :alt="product.name" class="object-cover w-full h-full" />
+                <!--<img :src="image" :alt="product.name" class="object-cover w-full h-full" />-->
+                <NuxtImg
+                  provider="cloudinary"
+                  :src="image"
+                  :alt="product.name"
+                  width="400"
+                  height="400"
+                  format="webp"
+                  quality="auto"
+                />
               </div>
             </div>
           </div>

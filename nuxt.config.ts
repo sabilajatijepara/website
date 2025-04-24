@@ -8,6 +8,8 @@ export default defineNuxtConfig({
     '@nuxtjs/google-fonts',
     '@nuxtjs/i18n',
     '@nuxtjs/sitemap',
+    '@nuxt/image',
+    '@nuxtjs/cloudinary'
   ],
   
   sitemap: {
@@ -75,4 +77,22 @@ export default defineNuxtConfig({
       Poppins: true,
     },
   },
+  
+  image: {
+    cloudinary: {
+      baseURL: 'https://res.cloudinary.com/dj6we26m8/image/upload/'
+    },
+    provider: 'cloudinary',
+    screens: {
+      sm: 320,
+      md: 640,
+      lg: 1024,
+      xl: 1280,
+      xxl: 1536
+    }
+  },
+
+  cloudinary: {
+    cloudName: 'dj6we26m8'
+  }
 })

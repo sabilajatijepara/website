@@ -12,6 +12,7 @@
   "dependencies": {
     "@nuxt/icon": "^1.10.3",
     "@nuxt/image": "^1.9.0",
+    "@nuxtjs/cloudinary": "^4.0.0",
     "@nuxtjs/google-fonts": "^3.2.0",
     "@nuxtjs/i18n": "^9.1.1",
     "@nuxtjs/ngrok": "^3.0.1",
