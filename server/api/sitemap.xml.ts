@@ -1,8 +1,8 @@
 export default defineEventHandler(async (event) => {
   try {
     // Fetch data dari API Blogger dan Produk
-    const [blogRes] = await Promise.all([
-      $fetch("https://sabilajatimebeljepara.vercel.app/api/blogger/sitemap")
+    const [blogRes, productRes] = await Promise.all([
+      $fetch("https://sabilajatimebeljepara.vercel.app/api/blogger/sitemap"), $fetch("https://sabilajati.com/api/products/sitemap")
     ]);
     
     // **🔹 Daftar Halaman Statis**
@@ -23,12 +23,19 @@ export default defineEventHandler(async (event) => {
       changefreq: "weekly",
       priority: 0.8,
     }));
+    
+    const productRoutes = productRes.map((product: any) => ({
+      loc: `https://sabilajati.com/products/${product.id}`,
+      lastmod: new Date().toISOString(),
+      changefreq: "weekly",
+      priority: 0.9,
+    }));
 
 
     // Gabungkan semua route
     /*const routes = [ ...staticRoutes, ...blogRoutes];*/
    
-    const routes = [ ...staticRoutes, ...blogRoutes, ];
+    const routes = [ ...staticRoutes, ...blogRoutes, ...productRoutes];
 
     // Generate XML Sitemap
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
