@@ -15,13 +15,20 @@ export default defineNuxtConfig({
   sitemap: {
     path: "sitemap.xml",
     hostname: "https://sabilajati.com", // Ganti dengan domain asli
+    name: "Sabilajati",
     gzip: true,
     xslTips: false,
     autoI18n: false,
     exclude: ["/dashboard/**", "/masuk", "/en/dashboard/**", "/en/masuk"], // Jangan tampilkan halaman admin
     sources: [
-      'https://sabilajatimebeljepara.vercel.app/api/sitemap'
+      '/api/sitemap.xml'
       ],
+    xslColumns: [
+      { label: 'URL', width: '50%' },
+      { label: 'Last Modified', select: 'sitemap:lastmod', width: '25%' },
+      { label: 'Priority', select: 'sitemap:priority', width: '12.5%' },
+      { label: 'Change Frequency', select: 'sitemap:changefreq', width: '12.5%' },
+    ],
   },
   
   ssr: true,
