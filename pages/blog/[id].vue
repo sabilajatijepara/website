@@ -2,7 +2,7 @@
   <div class="">
     <NavBar />
   </div>
-  <div class="px-4 container mx-auto">
+  <div class="px-4 container mx-auto max-w-4xl">
     <div class="py-2"></div>
         <div class="">
           <ol class="text-sm md:text-base">
@@ -81,7 +81,7 @@
     <div class="list-inside" v-html="post?.content"></div>
   </div>
     <!-- Footer -->
-  <div class="container mx-auto flex py-4">
+  <div class="container mx-auto flex py-4 max-w-4xl">
     <Footer />
   </div>
 </template>

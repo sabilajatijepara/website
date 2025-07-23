@@ -62,7 +62,7 @@ useHead({
   <div class="">
     <NavBar />
   </div>
-  <div class="py-4 container mx-auto flex flex-col px-4">
+  <div class="py-4 container mx-auto flex flex-col px-4 max-w-4xl">
     <div>
       <div class="py-2 px-3 bg-slate-300 rounded-lg">
         <ol class="flex items-center whitespace-nowrap">
@@ -113,7 +113,7 @@ useHead({
     </div>
   </div>
   <!-- Footer -->
-  <div class="container mx-auto flex py-4">
+  <div class="container mx-auto flex py-4 max-w-4xl">
     <Footer />
   </div>
 </template>

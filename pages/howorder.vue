@@ -28,7 +28,7 @@
   <div>
     <NavBar />
   </div>
-  <div class="container mx-auto px-4 py-4">
+  <div class="container mx-auto px-4 py-4 max-w-4xl">
     <div>
       <div class="py-2 px-3 bg-slate-300 rounded-lg">
       <ol class="flex items-center whitespace-nowrap">
@@ -81,7 +81,7 @@
       </div>
     </div>
   </div>
-  <div>
+  <div class="container mx-auto max-w-4xl">
     <Footer />
   </div>
 </template>

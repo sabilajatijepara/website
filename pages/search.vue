@@ -77,7 +77,7 @@ onMounted(() => {
     <NavBar />
 
     <!-- Form Pencarian -->
-     <div class="container mx-auto py-4 px-4">
+     <div class="container mx-auto py-4 px-4 max-w-4xl">
     <!-- Input Pencarian -->
     <div class="mb-4">
       <input
@@ -121,7 +121,9 @@ onMounted(() => {
   </div>
 
     <!-- Footer -->
-    <Footer />
+    <div class="container mx-auto max-w-4xl">
+      <Footer />
+    </div>
   </div>
 </template>
 

@@ -17,7 +17,7 @@ useHead({
 </script>
 
 <template>
-  <div class="container mx-auto py-10 px-4">
+  <div class="container mx-auto py-10 px-4 max-w-4xl">
     <div v-if="pending">Memuat...</div>
     <div v-else-if="error">Terjadi kesalahan saat memuat artikel.</div>
     <div v-else>

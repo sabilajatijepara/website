@@ -31,6 +31,16 @@ const progress = ref(0);
 
 const selectedCategories = ref([]);
 
+// Fungsi untuk mengubah nama jadi slug
+const generateSlug = (text) => {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '') // hapus karakter aneh
+    .replace(/\s+/g, '-') // ganti spasi dengan -
+    .replace(/--+/g, '-'); // hilangkan double dash
+};
+
 // Fetch kategori
 const fetchCategories = async () => {
   isLoading.value = true;
@@ -55,6 +65,7 @@ const fetchProduct = async (id) => {
     if (productDoc.exists()) {
       const productData = productDoc.data();
       name.value = productData.name;
+      slug.value = productData.slug;
       price.value = productData.price;
       description.value = productData.description;
       selectedCategories.value = productData.categories;
@@ -130,16 +141,18 @@ const handleSubmit = async () => {
     // Misalnya selectedCategories adalah array objek kategori
     const selectedCategoryNames = selectedCategories.value;
     
-    console.log("Data yang akan dikirim:", {
+    /*console.log("Data yang akan dikirim:", {
       name: name.value,
+      slug: generateSlug(name.value),
       price: parseFloat(price.value),
       description: description.value,
-      categories: selectedCategoryNames, // Kirim nama kategori saja
+      categories: selectedCategoryNames,
       imageURL: uploadedImages.value,
-    });
+    });*/
 
     await updateDoc(doc($db, "products", productId), {
       name: name.value,
+      slug: await generateUniqueSlug(name.value, route.params.id),
       price: parseFloat(price.value),
       description: description.value,
       categories: selectedCategoryNames,
@@ -200,6 +213,11 @@ onMounted(() => {
           class="border p-2 w-full"
           required
         />
+      </div>
+      <div>
+        <p class="text-sm text-gray-500 mt-1">
+          Slug: {{ generateSlug(name) }}
+        </p>
       </div>
       <!-- Harga Produk -->
       <div>

@@ -2,11 +2,11 @@
   <div>
     <NavBar />
   </div>
-  <div class="min-h-screen py-10 px-4">
+  <div class="min-h-screen py-10 px-4 max-w-4xl">
     <h1 class="text-3xl font-bold text-center mb-6">Frequently Asked Questions</h1>
     <FaqAccordion />
   </div>
-  <div>
+  <div class="container mx-auto max-w-4xl">
     <Footer />
   </div>
 </template>

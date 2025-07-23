@@ -191,7 +191,7 @@ onUnmounted(() => {
   </div>
 
   <div class="">
-    <div class="container mx-auto relative flex justify-center items-center w-full h-72 bg-black md:rounded-3xl overflow-hidden">
+    <div class="container mx-auto relative flex justify-center items-center w-full h-72 bg-black overflow-hidden">
       <div
         v-for="(slide, index) in slides"
         :key="slide.id"
@@ -245,7 +245,7 @@ onUnmounted(() => {
   </div>
   
   <!-- Kategori Produk -->
-<div class="py-4 container mx-auto flex flex-col px-4">
+<div class="py-4 container mx-auto flex flex-col px-4 max-w-4xl">
   <div class="py-4 flex overflow-x-auto">
     <div
       v-for="category in computedCategory"
@@ -263,7 +263,7 @@ onUnmounted(() => {
 </div>
 
 <!-- Produk -->
-  <div class="container mx-auto flex px-4 py-4">
+  <div class="container mx-auto flex px-4 py-4 max-w-4xl">
     <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
       <div class="rounded-2xl" v-for="product in products" :key="product.id">
         <div class="hover:shadow-xl rounded-2xl">
@@ -299,7 +299,7 @@ onUnmounted(() => {
   </div>
 
   <!-- Pagination -->
-  <div class="container mx-auto flex justify-center py-6">
+  <div class="container mx-auto flex justify-center py-6 max-w-4xl">
     <button class="gap-x-2 -ms-px text-sm md:text-base bg-transparent px-6 py-3 border border-black rounded-l-[32px] hover:bg-slate-300/60 focus:bg-red-200/60" @click="goToPage(currentPage - 1)"
         :class="{ 'bg-gray-300 text-gray-400 hover:bg-gray-300' : currentPage === 1 }" :disabled="currentPage === 1">{{ $t('Previous') }}</button>
         <span class="gap-x-2 -ms-px text-sm md:text-base bg-transparent px-6 py-3 border-y border-black hover:bg-slate-300/60 focus:bg-red-200/60">{{ currentPage }} / {{ totalPages }}</span>
@@ -309,7 +309,7 @@ onUnmounted(() => {
   
   <div class="py-2"></div>
   <div class="py-4">
-    <div class="px-4 container mx-auto flex">
+    <div class="px-4 container mx-auto flex max-w-4xl">
       <div class="bg-slate-300 overflow-hidden rounded-2xl px-6 md:px-12 py-8 md:py-12">
         <div class="relative grid grid-cols-2 gap-2 justify-items-center content-center w-full">
           <div class="place-items-center">
@@ -345,7 +345,7 @@ onUnmounted(() => {
   </div>
 
   <!-- Footer -->
-  <div class="container mx-auto flex py-4">
+  <div class="container mx-auto flex py-4 max-w-4xl">
     <Footer />
   </div>
 </template>

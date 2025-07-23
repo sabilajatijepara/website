@@ -87,6 +87,41 @@ const uploadImage = async () => {
   isUploading.value = false;
 };
 
+// Fungsi untuk mengubah nama jadi slug
+const generateSlug = (text) => {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '') // hapus karakter aneh
+    .replace(/\s+/g, '-') // ganti spasi dengan -
+    .replace(/--+/g, '-'); // hilangkan double dash
+};
+
+const generateUniqueSlug = async (name, currentId = null) => {
+  const baseSlug = generateSlug(name);
+  let uniqueSlug = baseSlug;
+  let counter = 1;
+
+  const snapshot = await getDocs(collection($db, "products"));
+  const products = snapshot.docs.map(doc => ({
+    id: doc.id,
+    slug: doc.data().slug
+  }));
+
+  const isDuplicate = (slug) => {
+    return products.some(
+      (product) => product.slug === slug && product.id !== currentId
+    );
+  };
+
+  while (isDuplicate(uniqueSlug)) {
+    counter++;
+    uniqueSlug = `${baseSlug}-${counter}`;
+  }
+
+  return uniqueSlug;
+};
+
 // Submit data produk
 const handleSubmit = async () => {
   if (uploadResult.value.length === 0) {
@@ -97,6 +132,7 @@ const handleSubmit = async () => {
   try {
     await addDoc(collection($db, "products"), {
       name: name.value,
+      slug: await generateUniqueSlug(name.value),
       price: parseFloat(price.value),
       description: description.value,
       categories: selectedCategories.value, // Simpan array kategori yang dipilih
@@ -146,6 +182,11 @@ onMounted(() => {
           class="border p-2 w-full"
           required
         />
+      </div>
+      <div>
+        <p class="text-sm text-gray-500 mt-1">
+          Slug: {{ generateSlug(name) }}
+        </p>
       </div>
       <!-- Harga Produk -->
       <div>

@@ -80,7 +80,7 @@ const formatPrice = (price) => {
     <NavBar />
     <div class="py-2"></div>
 
-    <div v-if="product" class="container mx-auto flex flex-col">
+    <div v-if="product" class="container mx-auto flex flex-col max-w-4xl">
       <div class="px-4">
         <div class="py-2 px-3 bg-slate-300 rounded-full overflow-hidden">
           <ol class="items-center whitespace-nowrap text-sm md:text-base">
@@ -166,7 +166,7 @@ const formatPrice = (price) => {
       </div>
     </div>
 
-    <div v-else class="container mx-auto text-center py-8">
+    <div v-else class="container mx-auto text-center py-8 max-w-4xl">
       <div>{{ $t('Product NF') }}</div>
     </div>
 
@@ -191,7 +191,7 @@ const formatPrice = (price) => {
     </div>
 
     <div class="py-4"></div>
-    <div class="container mx-auto flex">
+    <div class="container mx-auto flex max-w-4xl">
       <Footer />
     </div>
   </div>

@@ -2,7 +2,7 @@
   <div>
     <NavBar />
     <div class="py-3"></div>
-    <div class="container mx-auto flex flex-col px-6 space-y-4">
+    <div class="container mx-auto flex flex-col px-6 space-y-4 max-w-4xl">
       <div class="bg-slate-300 px-4 py-6">
         <div><Icon name="tabler:help-square-rounded" size="3rem"></Icon></div>
         <div class="text-xl font-bold py-2">Anda memiliki pertanyaan?</div>
@@ -29,7 +29,9 @@
       </div>
     </div>
     <div class="py-3"></div>
-    <Footer />
+    <div class="max-w-4xl">
+      <Footer />
+    </div>
   </div>
 </template>
 
