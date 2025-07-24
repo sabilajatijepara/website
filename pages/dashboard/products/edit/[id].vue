@@ -13,6 +13,7 @@ const route = useRoute();
 const name = ref("");
 const price = ref("");
 const description = ref("");
+const slug = ref("");
 
 // Data kategori
 const categories = ref([]);
@@ -70,7 +71,6 @@ const fetchProduct = async (id) => {
       description.value = productData.description;
       selectedCategories.value = productData.categories;
       uploadedImages.value = productData.imageURL || [];
-      console.log(productData.categories)
     } else {
       console.error("Produk tidak ditemukan.");
       router.push("/dashboard/products");
