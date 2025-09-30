@@ -160,7 +160,7 @@ const handleSubmit = async () => {
       name: name.value,
       name_en: name_en.value,
       slug: await generateUniqueSlug(name.value, route.params.id),
-      slug: await generateUniqueSlug(name_en.value, route.params.id),
+      slug_en: await generateUniqueSlug(name_en.value, route.params.id),
       price: parseFloat(price.value),
       description: description.value,
       desc_en: desc_en.value,
