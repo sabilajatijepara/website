@@ -71,12 +71,12 @@ const fetchProduct = async (id) => {
     if (productDoc.exists()) {
       const productData = productDoc.data();
       name.value = productData.name;
-      name_en.value = productData.name_en;
+      name_en.value = productData.name_en || "";
       slug.value = productData.slug;
-      slug_en.value = productData.slug_en
+      slug_en.value = productData.slug_en || "";
       price.value = productData.price;
       description.value = productData.description;
-      desc_en.value = productData.desc_en;
+      desc_en.value = productData.desc_en || "";
       selectedCategories.value = productData.categories;
       uploadedImages.value = productData.imageURL || [];
     } else {
