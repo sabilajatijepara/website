@@ -37,7 +37,9 @@ const selectedCategories = ref([]);
 
 // Fungsi untuk mengubah nama jadi slug
 const generateSlug = (text) => {
+  if (!text) return "";
   return text
+    .toString()
     .toLowerCase()
     .trim()
     .replace(/[^\w\s-]/g, '') // hapus karakter aneh
@@ -240,7 +242,7 @@ onMounted(() => {
       </div>
       <div>
         <p class="text-sm text-gray-500 mt-1">
-          Slug (EN): {{ generateSlug(name_en) }}
+          Slug (EN): {{ generateSlug(name_en || name) }}
         </p>
       </div>
       <!-- Harga Produk -->
