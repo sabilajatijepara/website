@@ -137,6 +137,56 @@ const removeImage = (index) => {
   uploadedImages.value.splice(index, 1);
 };
 
+const generateUniqueSlug = async (name, currentId = null) => {
+  const baseSlug = generateSlug(name);
+  let uniqueSlug = baseSlug;
+  let counter = 1;
+
+  const snapshot = await getDocs(collection($db, "products"));
+  const products = snapshot.docs.map(doc => ({
+    id: doc.id,
+    slug: doc.data().slug
+  }));
+
+  const isDuplicate = (slug) => {
+    return products.some(
+      (product) => product.slug === slug && product.id !== currentId
+    );
+  };
+
+  while (isDuplicate(uniqueSlug)) {
+    counter++;
+    uniqueSlug = `${baseSlug}-${counter}`;
+  }
+
+  return uniqueSlug;
+};
+
+const generateUniqueSlug_en = async (name_en, currentId = null) => {
+  const baseSlug = generateSlug(name_en);
+  let uniqueSlug = baseSlug;
+  let counter = 1;
+
+  const snapshot = await getDocs(collection($db, "products"));
+  const products = snapshot.docs.map(doc => ({
+    id: doc.id,
+    slug: doc.data().slug_en
+  }));
+
+  const isDuplicate = (slug) => {
+    return products.some(
+      (product) => product.slug_en === slug && product.id !== currentId
+    );
+  };
+
+  while (isDuplicate(uniqueSlug)) {
+    counter++;
+    uniqueSlug = `${baseSlug}-${counter}`;
+  }
+
+  return uniqueSlug;
+};
+
 // Submit perubahan data produk
 const handleSubmit = async () => {
   const productId = route.params.id;
@@ -162,7 +212,7 @@ const handleSubmit = async () => {
       name: name.value,
       name_en: name_en.value,
       slug: await generateUniqueSlug(name.value, route.params.id),
-      slug_en: await generateUniqueSlug(name_en.value, route.params.id),
+      slug_en: await generateUniqueSlug_en(name_en.value, route.params.id),
       price: parseFloat(price.value),
       description: description.value,
       desc_en: desc_en.value,
