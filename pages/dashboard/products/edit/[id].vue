@@ -11,9 +11,12 @@ const route = useRoute();
 
 // Form fields
 const name = ref("");
+const name_en = ref("");
 const price = ref("");
 const description = ref("");
+const desc_en = ref("");
 const slug = ref("");
+const slug_en = ref("");
 
 // Data kategori
 const categories = ref([]);
@@ -66,9 +69,12 @@ const fetchProduct = async (id) => {
     if (productDoc.exists()) {
       const productData = productDoc.data();
       name.value = productData.name;
+      name_en.value = productData.name_en;
       slug.value = productData.slug;
+      slug_en.value = productData.slug_en
       price.value = productData.price;
       description.value = productData.description;
+      desc_en.value = productData.desc_en;
       selectedCategories.value = productData.categories;
       uploadedImages.value = productData.imageURL || [];
     } else {
@@ -152,9 +158,12 @@ const handleSubmit = async () => {
 
     await updateDoc(doc($db, "products", productId), {
       name: name.value,
+      name_en: name_en.value,
       slug: await generateUniqueSlug(name.value, route.params.id),
+      slug: await generateUniqueSlug(name_en.value, route.params.id),
       price: parseFloat(price.value),
       description: description.value,
+      desc_en: desc_en.value,
       categories: selectedCategoryNames,
       imageURL: uploadedImages.value,
     });
@@ -215,8 +224,23 @@ onMounted(() => {
         />
       </div>
       <div>
+        <label for="name_en" class="block">Product Name (EN)</label>
+        <input
+          v-model="name_en"
+          type="text"
+          id="name_en"
+          class="border p-2 w-full"
+          required
+        />
+      </div>
+      <div>
         <p class="text-sm text-gray-500 mt-1">
           Slug: {{ generateSlug(name) }}
+        </p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500 mt-1">
+          Slug (EN): {{ generateSlug(name_en) }}
         </p>
       </div>
       <!-- Harga Produk -->
@@ -227,7 +251,7 @@ onMounted(() => {
           type="number"
           id="price"
           class="border p-2 w-full"
-          required
+          
         />
       </div>
       <!-- Kategori Produk -->
@@ -257,6 +281,15 @@ onMounted(() => {
         <textarea
           v-model="description"
           id="description"
+          class="border p-2 w-full"
+          required
+        />
+      </div>
+      <div>
+        <label for="desc_en" class="block">Description (EN)</label>
+        <textarea
+          v-model="desc_en"
+          id="desc_en"
           class="border p-2 w-full"
           required
         />

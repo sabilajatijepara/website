@@ -15,6 +15,9 @@ const description = ref("");
 const categories = ref([]); // Array untuk menyimpan kategori yang dipilih
 const selectedCategories = ref([]); // Array kategori terpilih
 
+const name_en = ref("");
+const desc_en = ref("");
+
 // Data kategori
 const isLoading = ref(true);
 
@@ -122,6 +125,31 @@ const generateUniqueSlug = async (name, currentId = null) => {
   return uniqueSlug;
 };
 
+const generateUniqueSlug_en = async (name_en, currentId = null) => {
+  const baseSlug = generateSlug(name_en);
+  let uniqueSlug = baseSlug;
+  let counter = 1;
+
+  const snapshot = await getDocs(collection($db, "products"));
+  const products = snapshot.docs.map(doc => ({
+    id: doc.id,
+    slug: doc.data().slug_en
+  }));
+
+  const isDuplicate = (slug) => {
+    return products.some(
+      (product) => product.slug_en === slug && product.id !== currentId
+    );
+  };
+
+  while (isDuplicate(uniqueSlug)) {
+    counter++;
+    uniqueSlug = `${baseSlug}-${counter}`;
+  }
+
+  return uniqueSlug;
+};
+
 // Submit data produk
 const handleSubmit = async () => {
   if (uploadResult.value.length === 0) {
@@ -132,9 +160,12 @@ const handleSubmit = async () => {
   try {
     await addDoc(collection($db, "products"), {
       name: name.value,
+      name_en: name_en.value,
       slug: await generateUniqueSlug(name.value),
+      slug_en: await generateUniqueSlug_en(name_en.value),
       price: parseFloat(price.value),
       description: description.value,
+      desc_en: desc_en.value,
       categories: selectedCategories.value, // Simpan array kategori yang dipilih
       imageURL: uploadResult.value,
       createdAt: Timestamp.now(),
@@ -174,7 +205,7 @@ onMounted(() => {
     <form @submit.prevent="handleSubmit" class="space-y-4">
       <!-- Nama Produk -->
       <div>
-        <label for="name" class="block">Product Name</label>
+        <label for="name" class="block">Product Name (ID)</label>
         <input
           v-model="name"
           type="text"
@@ -184,8 +215,23 @@ onMounted(() => {
         />
       </div>
       <div>
+        <label for="name_en" class="block">Product Name (EN)</label>
+        <input
+          v-model="name_en"
+          type="text"
+          id="name_en"
+          class="border p-2 w-full"
+          required
+        />
+      </div>
+      <div>
         <p class="text-sm text-gray-500 mt-1">
-          Slug: {{ generateSlug(name) }}
+          Slug (ID): {{ generateSlug(name) }}
+        </p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500 mt-1">
+          Slug (EN): {{ generateSlug(name_en) }}
         </p>
       </div>
       <!-- Harga Produk -->
@@ -196,7 +242,7 @@ onMounted(() => {
           type="number"
           id="price"
           class="border p-2 w-full"
-          required
+          
         />
       </div>
       <!-- Kategori Produk -->
@@ -221,10 +267,19 @@ onMounted(() => {
       </div>
       <!-- Deskripsi Produk -->
       <div>
-        <label for="description" class="block">Description</label>
+        <label for="description" class="block">Description (ID)</label>
         <textarea
           v-model="description"
           id="description"
+          class="border p-2 w-full"
+          required
+        />
+      </div>
+      <div>
+        <label for="desc_en" class="block">Description (EN)</label>
+        <textarea
+          v-model="desc_en"
+          id="desc_en"
           class="border p-2 w-full"
           required
         />
